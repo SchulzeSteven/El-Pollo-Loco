@@ -1,12 +1,24 @@
 let canvas;
-let ctx;
-let character = new Image();
+let world;
 
 
 function init() {
     canvas = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
-    character.src = './assets/img/Sharkie/Swim/Swim_1.png';
+    world = new World(canvas);
 
-    ctx.drawImage(character, 20, 20, 50, 150);
+
+    console.log('My Character is', world.character);
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+}
+
+
+function resizeCanvas() {
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    } else {
+        canvas.width = document.body.clientWidth;
+        canvas.height = document.body.clientHeight;
+    }
 }
