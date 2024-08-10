@@ -13,6 +13,12 @@ body {
     background-image: url('./assets/img/5_background/bg.png');
 }
 
+h1 {
+    font-size: 56px;
+    text-decoration: underline;
+    margin: 0;
+}
+
 canvas {
     background-color: black;
     border-width: 100px;
