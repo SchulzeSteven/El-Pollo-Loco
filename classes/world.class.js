@@ -18,6 +18,7 @@ class World {
     canvas;
     ctx;
     keyboard;
+    camera_x = 0;
 
 
     constructor(canvas, keyboard) {
@@ -36,11 +37,13 @@ class World {
 
     draw() {
         this.clearCanvas();
-        
+        this.ctx.translate(this.camera_x, 0);   
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.clouds);
         this.addToMap(this.character);
         this.addObjectsToMap(this.enemies);
+        this.ctx.translate(-this.camera_x, 0); 
+
 
 
         // Draw() wird immer wieder aufgerufen
@@ -59,7 +62,26 @@ class World {
 
 
     addToMap(moveableobject) {
+        if (moveableobject.otherDirection) {
+            this.flipImage(moveableobject);
+        }
         this.ctx.drawImage(moveableobject.img, moveableobject.x, moveableobject.y, moveableobject.width, moveableobject.height);
+        if (moveableobject.otherDirection) {
+            this.flipImageBack(moveableobject);
+        }
+    }
+
+
+    flipImage(moveableobject) {
+        this.ctx.save();
+        this.ctx.translate(moveableobject.width, 0);
+        this.ctx.scale(-1, 1);
+        moveableobject.x = moveableobject.x * -1;
+    }
+
+    flipImageBack(moveableobject) {
+        moveableobject.x = moveableobject.x * -1;
+        this.ctx.restore();
     }
 
 
