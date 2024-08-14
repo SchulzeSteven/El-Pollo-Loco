@@ -12,6 +12,7 @@ const level1 = new Level(
         new Endboss()
     ],
 
+
     [
         new Cloud(),
         new Cloud(),
@@ -21,6 +22,7 @@ const level1 = new Level(
         new Cloud(),
     ],
 
+
     [
         new Coin(),
         new Coin(),
@@ -28,6 +30,18 @@ const level1 = new Level(
         new Coin(),
         new Coin(),
     ],
+
+
+    [
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+        new Bottle(),
+    ],
+
 
     [
         new BackgroundObjekt('./assets/img/5_background/layers/air.png', -719),
