@@ -53,6 +53,7 @@ class Character extends MoveableObject {
     world;
     walking_sound = new Audio('./audio/steps.mp3');
     jumping_sound = new Audio('./audio/jump.mp3');
+    snoring_sound = new Audio('./audio/snore.mp3');
     idleTimeout;
     longIdleTimeout;
     idleInterval;
@@ -72,6 +73,7 @@ class Character extends MoveableObject {
         this.setIdleTimers();
         this.walking_sound.volume = 0.4;
         this.jumping_sound.volume = 0.2;
+        this.snoring_sound.volume = 0.5;
     }
 
 
@@ -85,6 +87,7 @@ class Character extends MoveableObject {
                 this.otherDirection = false;
                 if (!this.isAboveGround()) {  // Nur wenn der Charakter auf dem Boden ist
                     this.walking_sound.play();
+                    this.snoring_sound.pause();
                 }
             }
 
@@ -94,6 +97,7 @@ class Character extends MoveableObject {
                 this.otherDirection = true;
                 if (!this.isAboveGround()) {  // Nur wenn der Charakter auf dem Boden ist
                     this.walking_sound.play();
+                    this.snoring_sound.pause();
                 }
             }
 
@@ -101,6 +105,7 @@ class Character extends MoveableObject {
                 this.jump();
                 this.resetIdleTimers();
                 this.jumping_sound.play();
+                this.snoring_sound.pause();
             }
 
             this.world.camera_x = -this.x + 100;
@@ -121,6 +126,7 @@ class Character extends MoveableObject {
             if (!this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
                 if (this.isLongIdle) {
                     this.playAnimation(this.IMAGES_IDLE_LONG);
+                    this.snoring_sound.play();
                 } else if (this.isIdle) {
                     this.playAnimation(this.IMAGES_IDLE);
                 } else {
