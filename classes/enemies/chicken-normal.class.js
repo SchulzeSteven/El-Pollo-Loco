@@ -13,18 +13,31 @@ class Chicken_Normal extends MoveableObject {
         this.loadImages(this.IMAGES_WALKING);
 
         this.y = 350;
-        this.x = 700 + Math.random() * 2100;
+        this.x = 750 + Math.random() * 2100;
         this.speed = 0.15 + Math.random() * 0.45;
         this.animate();
     }
 
 
     animate() {
-        this.moveLeft();
+        setInterval(() => {
+            this.checkMovement();
+        }, 1000 / 60);
 
-        setInterval( () => {
+        setInterval(() => {
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
+    }
+
+    checkMovement() {
+        if (!this.movementStarted && (keyboard.LEFT || keyboard.RIGHT)) {
+            this.movementStarted = true; // Bewegung als gestartet markieren
+            if (keyboard.LEFT) {
+                this.moveLeft();
+            } else if (keyboard.RIGHT) {
+                this.moveLeft();
+            }
+        }
     }
 
 }
