@@ -68,14 +68,13 @@ class MoveableObject {
 
 
         moveLeft() {
-            this.x -= this.speed;
-        }
-
-
-        moveLeftChicken() {
-            setInterval(() => {
+            if (this instanceof Chicken_Normal || this instanceof Chicken_Small || this instanceof Cloud) {
+                setInterval(() => {
+                    this.x -= this.speed;
+                }, 1000 / 60);
+            } else {
                 this.x -= this.speed;
-            }, 1000 / 60);
+            }
         }
 
 

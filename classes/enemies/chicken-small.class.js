@@ -33,9 +33,9 @@ class Chicken_Small extends MoveableObject {
         if (!this.movementStarted && (keyboard.LEFT || keyboard.RIGHT)) {
             this.movementStarted = true; // Bewegung als gestartet markieren
             if (keyboard.LEFT) {
-                this.moveLeftChicken();
+                this.moveLeft();
             } else if (keyboard.RIGHT) {
-                this.moveLeftChicken();
+                this.moveLeft();
             }
         }
     }

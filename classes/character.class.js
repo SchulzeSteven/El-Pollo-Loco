@@ -72,7 +72,7 @@ class Character extends MoveableObject {
         this.animate();
         this.setIdleTimers();
         this.walking_sound.volume = 0.4;
-        this.jumping_sound.volume = 0.2;
+        this.jumping_sound.volume = 0.1;
         this.snoring_sound.volume = 0.5;
     }
 
@@ -85,7 +85,7 @@ class Character extends MoveableObject {
                 this.moveRight();
                 this.resetIdleTimers();
                 this.otherDirection = false;
-                if (!this.isAboveGround()) {  // Nur wenn der Charakter auf dem Boden ist
+                if (!this.isAboveGround()) {
                     this.walking_sound.play();
                     this.snoring_sound.pause();
                 }
@@ -95,7 +95,7 @@ class Character extends MoveableObject {
                 this.moveLeft();
                 this.resetIdleTimers();
                 this.otherDirection = true;
-                if (!this.isAboveGround()) {  // Nur wenn der Charakter auf dem Boden ist
+                if (!this.isAboveGround()) {
                     this.walking_sound.play();
                     this.snoring_sound.pause();
                 }
@@ -105,7 +105,7 @@ class Character extends MoveableObject {
                 this.jump();
                 this.resetIdleTimers();
                 this.jumping_sound.play();
-                this.snoring_sound.pause();
+                this.snoring_sound.pause(); 
             }
 
             this.world.camera_x = -this.x + 100;
