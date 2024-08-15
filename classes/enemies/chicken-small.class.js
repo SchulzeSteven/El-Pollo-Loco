@@ -13,7 +13,7 @@ class Chicken_Small extends MoveableObject {
         this.loadImages(this.IMAGES_WALKING);
 
         this.y = 375;
-        this.x = 650 + Math.random() * 2100;
+        this.x = 600 + Math.random() * 2100;
         this.speed = 0.15 + Math.random() * 0.35;
         this.animate();
     }
@@ -33,9 +33,9 @@ class Chicken_Small extends MoveableObject {
         if (!this.movementStarted && (keyboard.LEFT || keyboard.RIGHT)) {
             this.movementStarted = true; // Bewegung als gestartet markieren
             if (keyboard.LEFT) {
-                this.moveLeft();
+                this.moveLeftChicken();
             } else if (keyboard.RIGHT) {
-                this.moveLeft();
+                this.moveLeftChicken();
             }
         }
     }
