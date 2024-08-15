@@ -16,7 +16,6 @@ class Bottle extends MoveableObject {
         this.loadImages(this.IMAGES_ONGROUND);
         this.setRandomXPosition();
         this.setRandomImage();
-        /* this.animate(); */
     }
 
 
@@ -33,12 +32,4 @@ class Bottle extends MoveableObject {
         let randomIndex = Math.floor(Math.random() * this.IMAGES_ONGROUND.length);
         this.img = this.imageCache[this.IMAGES_ONGROUND[randomIndex]];
     }
-
-
-    /* animate() {
-        setInterval( () => {
-        this.playAnimationCollectable(this.IMAGES_MOVING);
-        }, 200);
-    } */
-
 }
