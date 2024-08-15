@@ -30,7 +30,7 @@ class World {
                     console.log('Collision with Character', this.character.life);
                 } 
             });
-        }, 200);
+        }, 250);
     }
 
 
