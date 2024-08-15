@@ -13,11 +13,24 @@ class World {
         this.keyboard = keyboard;
         this.draw();
         this.setWorld();
+        this.checkCollisions();
     }
 
 
     setWorld() {
         this.character.world = this;
+    }
+
+
+    checkCollisions() {
+        setInterval(() => {
+            this.level.enemies.forEach((enemy) => {
+                if (this.character.isColliding(enemy) ) {
+                    this.character.hit();
+                    console.log('Collision with Character', this.character.life);
+                } 
+            });
+        }, 200);
     }
 
 
@@ -53,12 +66,9 @@ class World {
         if (moveableobject.otherDirection) {
             this.flipImage(moveableobject);
         }
-        this.ctx.drawImage(moveableobject.img, moveableobject.x, moveableobject.y, moveableobject.width, moveableobject.height);
-        this.ctx.beginPath();
-        this.ctx.lineWidth = '2';
-        this.ctx.strokeStyle = 'blue';
-        this.ctx.rect(moveableobject.x, moveableobject.y, moveableobject.width, moveableobject.height);
-        this.ctx.stroke();
+        
+        moveableobject.draw(this.ctx);
+        moveableobject.drawFrame(this.ctx);
 
         if (moveableobject.otherDirection) {
             this.flipImageBack(moveableobject);

@@ -50,6 +50,16 @@ class Character extends MoveableObject {
         './assets/img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
+    IMAGES_DEAD = [
+        './assets/img/2_character_pepe/5_dead/D-51.png',
+        './assets/img/2_character_pepe/5_dead/D-52.png',
+        './assets/img/2_character_pepe/5_dead/D-53.png',
+        './assets/img/2_character_pepe/5_dead/D-54.png',
+        './assets/img/2_character_pepe/5_dead/D-55.png',
+        './assets/img/2_character_pepe/5_dead/D-56.png',
+        './assets/img/2_character_pepe/5_dead/D-57.png',
+    ];
+
     world;
     walking_sound = new Audio('./audio/steps.mp3');
     jumping_sound = new Audio('./audio/jump.mp3');
@@ -60,12 +70,14 @@ class Character extends MoveableObject {
     longIdleInterval;
     isIdle = false;
     isLongIdle = false;
+    animationStarted = false; // Flag to ensure IMAGES_DEAD is played only once
 
 
     constructor() {
         super().loadImage('./assets/img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMPING);
+        this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_IDLE_LONG);
         this.applyGravity();
@@ -78,8 +90,14 @@ class Character extends MoveableObject {
 
 
     animate() {
-
         setInterval(() => {
+            if (this.isDead()) {
+                this.walking_sound.pause();
+                this.jumping_sound.pause();
+                this.snoring_sound.pause();
+                return; // Stop further animation if dead
+            }
+
             this.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
@@ -113,16 +131,24 @@ class Character extends MoveableObject {
 
         /* JUMP and WALK Timers */
         setInterval(() => {
-            if (this.isAboveGround()) {
+            if (this.isDead()) {
+                if (!this.animationStarted) {
+                    this.playDeadAnimationOnce(); // Play IMAGES_DEAD once
+                }
+            } else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.playAnimation(this.IMAGES_WALKING);
             }
         }, 80);
 
-        
         /* IDLES Timers */
         setInterval(() => {
+            if (this.isDead()) {
+                this.snoring_sound.pause(); // Ensure snoring stops when dead
+                return; // Stop idle animations if dead
+            }
+
             if (!this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
                 if (this.isLongIdle) {
                     this.playAnimation(this.IMAGES_IDLE_LONG);
@@ -134,6 +160,19 @@ class Character extends MoveableObject {
                 }
             }
         }, 200);
+    }
+
+    playDeadAnimationOnce() {
+        this.animationStarted = true; // Ensure this method is only triggered once
+        let currentImageIndex = 0;
+        const interval = setInterval(() => {
+            if (currentImageIndex < this.IMAGES_DEAD.length) {
+                this.loadImage(this.IMAGES_DEAD[currentImageIndex]);
+                currentImageIndex++;
+            } else {
+                clearInterval(interval); // Stop the interval when the last image is shown
+            }
+        }, 150); // Adjust the timing here to fit the desired animation speed
     }
 
     setIdleTimers() {
