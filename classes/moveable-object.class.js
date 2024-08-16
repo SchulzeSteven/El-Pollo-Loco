@@ -64,29 +64,13 @@ class MoveableObject {
         }
 
 
-        /* isColliding (moveableobject) {
-            return  (this.X + this.width) >= moveableobject.X && this.X <= (moveableobject.X + moveableobject.width) && 
-                    (this.Y + this.offsetY + this.height) >= moveableobject.Y &&
-                    (this.Y + this.offsetY) <= (moveableobject.Y + moveableobject.height) && 
-                    moveableobject.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
-    
-        } */
-
         isColliding(moveableobject) {
-            return this.x + this.width > moveableobject.x &&
-                this.y + this.height > moveableobject.y &&
-                this.x < moveableobject.x &&
-                this.y < moveableobject.y + moveableobject.height;
-        }
-
-
-        hit() {
-            this.life -= 10;
-            if (this.life < 0) {
-                this.life = 0;
-            } else {
-                this.lastHit = new Date().getTime();
-            }
+            let offset = 15;
+                
+            return this.x + this.width - offset > moveableobject.x + offset &&
+                this.y + this.height - offset > moveableobject.y + offset &&
+                this.x + offset < moveableobject.x + moveableobject.width - offset &&
+                this.y + offset < moveableobject.y + moveableobject.height - offset;
         }
 
 
@@ -107,6 +91,26 @@ class MoveableObject {
             let path = images[i];
             this.img = this.imageCache[path];
             this.currentImage++;
+        }
+
+
+        calculateDamage(enemy) {
+            if (enemy instanceof Chicken_Small) {
+                return 5;
+            } else if (enemy instanceof Chicken_Normal) {
+                return 10;
+            }
+            return 25; // Standard-Schaden für andere Feinde
+        }
+
+
+        applyDamage(damage) {
+            this.life -= damage;
+            if (this.life < 0) {
+                this.life = 0;
+            } else {
+                this.lastHit = new Date().getTime();
+            }
         }
 
 

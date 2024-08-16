@@ -5,6 +5,7 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
+    showFrames = false;
 
 
     constructor(canvas, keyboard) {
@@ -14,6 +15,17 @@ class World {
         this.draw();
         this.setWorld();
         this.checkCollisions();
+        this.setupFrameToggle();
+    }
+
+
+    setupFrameToggle() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === '#') {
+                this.showFrames = !this.showFrames;  // Zustand umschalten
+                console.log(`Frame drawing is now ${this.showFrames ? 'enabled' : 'disabled'}`);
+            }
+        });
     }
 
 
@@ -23,12 +35,19 @@ class World {
 
 
     checkCollisions() {
-        setInterval(() => {
+        const collisionInterval = setInterval(() => {
+            if (this.character.isDead()) {
+                clearInterval(collisionInterval);  // Stoppt die Kollisionserkennung, wenn der Charakter tot ist
+                console.log('Character is dead, collisions disabled.');
+                return;
+            }
+    
             this.level.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy) ) {
-                    this.character.hit();
+                // Kollision nur überprüfen, wenn der Charakter nicht verletzt ist
+                if (!this.character.isHurt() && this.character.isColliding(enemy)) {
+                    this.character.hit(enemy);  // Übergibt den enemy an die hit()-Methode des Characters
                     console.log('Collision with Character', this.character.life);
-                } 
+                }
             });
         }, 250);
     }
@@ -66,9 +85,12 @@ class World {
         if (moveableobject.otherDirection) {
             this.flipImage(moveableobject);
         }
-        
+
         moveableobject.draw(this.ctx);
-        moveableobject.drawFrame(this.ctx);
+
+        if (this.showFrames) {  // Nur zeichnen, wenn showFrames true ist
+            moveableobject.drawFrame(this.ctx);
+        }
 
         if (moveableobject.otherDirection) {
             this.flipImageBack(moveableobject);

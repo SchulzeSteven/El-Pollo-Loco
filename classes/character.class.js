@@ -70,6 +70,7 @@ class Character extends MoveableObject {
     walking_sound = new Audio('./audio/steps.mp3');
     jumping_sound = new Audio('./audio/jump.mp3');
     snoring_sound = new Audio('./audio/snore.mp3');
+    hurting_sound = new Audio('./audio/hurt.mp3');
     idleTimeout;
     longIdleTimeout;
     idleInterval;
@@ -93,6 +94,7 @@ class Character extends MoveableObject {
         this.walking_sound.volume = 0.4;
         this.jumping_sound.volume = 0.1;
         this.snoring_sound.volume = 0.5;
+        this.hurting_sound.volume = 0.2;
     }
 
 
@@ -130,7 +132,7 @@ class Character extends MoveableObject {
                 this.jump();
                 this.resetIdleTimers();
                 this.jumping_sound.play();
-                this.snoring_sound.pause(); 
+                this.snoring_sound.pause();
             }
 
             this.world.camera_x = -this.x + 100;
@@ -184,6 +186,7 @@ class Character extends MoveableObject {
         }, 150); // Adjust the timing here to fit the desired animation speed
     }
 
+    
     setIdleTimers() {
         this.idleTimeout = setTimeout(() => {
             this.isIdle = true;
@@ -193,11 +196,20 @@ class Character extends MoveableObject {
         }, 3000);
     }
 
+
     resetIdleTimers() {
         clearTimeout(this.idleTimeout);
         clearTimeout(this.longIdleTimeout);
         this.isIdle = false;
         this.isLongIdle = false;
         this.setIdleTimers();
+    }
+
+
+    hit(enemy) {
+        const damage = this.calculateDamage(enemy);
+        this.applyDamage(damage);
+        this.hurting_sound.play();
+        console.log(`Character hit by ${enemy.constructor.name}, received ${damage} damage. Remaining life: ${this.life}`);
     }
 }
