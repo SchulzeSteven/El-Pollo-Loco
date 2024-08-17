@@ -91,10 +91,10 @@ class Character extends MoveableObject {
         this.applyGravity();
         this.animate();
         this.setIdleTimers();
-        this.walking_sound.volume = 0.4;
+        /* this.walking_sound.volume = 0.4;
         this.jumping_sound.volume = 0.1;
         this.snoring_sound.volume = 0.5;
-        this.hurting_sound.volume = 0.2;
+        this.hurting_sound.volume = 0.2; */
     }
 
 

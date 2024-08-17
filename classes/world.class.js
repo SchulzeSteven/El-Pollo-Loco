@@ -6,7 +6,7 @@ class World {
     keyboard;
     camera_x = 0;
     showFrames = false;
-
+    statusBar = new StatusBar();
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -18,7 +18,7 @@ class World {
         this.setupFrameToggle();
     }
 
-
+    
     setupFrameToggle() {
         window.addEventListener('keydown', (event) => {
             if (event.key === '#') {
@@ -41,11 +41,12 @@ class World {
                 console.log('Character is dead, collisions disabled.');
                 return;
             }
-    
+
             this.level.enemies.forEach((enemy) => {
                 // Kollision nur überprüfen, wenn der Charakter nicht verletzt ist
                 if (!this.character.isHurt() && this.character.isColliding(enemy)) {
                     this.character.hit(enemy);  // Übergibt den enemy an die hit()-Methode des Characters
+                    this.statusBar.setPercentage(this.character.life);
                     console.log('Collision with Character', this.character.life);
                 }
             });
@@ -56,20 +57,24 @@ class World {
     draw() {
         this.clearCanvas();
         this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.coins); 
-        this.addObjectsToMap(this.level.bottles);  
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+
+        this.ctx.translate(-this.camera_x, 0);
+
+        // ----------- Space for fixed objects -----------//
+        this.addToMap(this.statusBar);  // Zeichnet die StatusBar unabhängig von der Kamera-Position
+        this.ctx.translate(this.camera_x, 0);
+
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
-        this.ctx.translate(-this.camera_x, 0); 
-
-
+        this.ctx.translate(-this.camera_x, 0);
 
         // Draw() wird immer wieder aufgerufen
-        let self = this;
-        requestAnimationFrame(function() {
-            self.draw();
+        requestAnimationFrame(() => {
+            this.draw();
         });
     }
 
@@ -97,7 +102,6 @@ class World {
         }
     }
 
-
     flipImage(moveableobject) {
         this.ctx.save();
         this.ctx.translate(moveableobject.width, 0);
@@ -110,12 +114,7 @@ class World {
         this.ctx.restore();
     }
 
-
-    /**
-     * simple function to clear the canvas graphics before every new draw cycle
-     */
     clearCanvas() {
-        this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-
 }
