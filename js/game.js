@@ -2,6 +2,7 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let isMuted = false;
+let throwSoundVolume = 0.1;
 
 
 function init() {
@@ -30,6 +31,10 @@ document.addEventListener("keydown", (event) => {
   if (event.keyCode == 40) {
     keyboard.DOWN = true;
   }
+
+  if (event.keyCode == 68) {
+    keyboard.D = true;
+  }
 });
 
 
@@ -53,6 +58,10 @@ document.addEventListener("keyup", (event) => {
   if (event.keyCode == 40) {
     keyboard.DOWN = false;
   }
+
+  if (event.keyCode == 68) {
+    keyboard.D = false;
+  }
 });
 
 
@@ -65,6 +74,7 @@ function muteGame() {
   world.character.jumping_sound.volume = volume;
   world.character.snoring_sound.volume = volume;
   world.character.hurting_sound.volume = volume;
+  world.throw_sound.volume = isMuted ? 0 : throwSoundVolume;
 
   updateMuteButton();
 }

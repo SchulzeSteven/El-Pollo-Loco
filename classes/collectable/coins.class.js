@@ -8,7 +8,7 @@ class Coin extends MoveableObject {
     ];
     
     static lastX = 0;
-    static minSpacing = 250;
+    static minSpacing = 150;
 
 
     constructor() {
@@ -23,7 +23,7 @@ class Coin extends MoveableObject {
         let minX = Coin.lastX + Coin.minSpacing;
         let maxX = 0 + Math.random() * 1600;
         this.x = Math.max(minX, maxX);
-        this.y = 60 + Math.random() * 250;
+        this.y = 60 + Math.random() * 220;
         Coin.lastX = this.x;
     }
 

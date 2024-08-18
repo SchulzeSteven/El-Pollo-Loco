@@ -91,10 +91,6 @@ class Character extends MoveableObject {
         this.applyGravity();
         this.animate();
         this.setIdleTimers();
-        /* this.walking_sound.volume = 0.4;
-        this.jumping_sound.volume = 0.1;
-        this.snoring_sound.volume = 0.5;
-        this.hurting_sound.volume = 0.2; */
     }
 
 
@@ -156,7 +152,7 @@ class Character extends MoveableObject {
         /* IDLES Timers */
         setInterval(() => {
             if (this.isDead()) {
-                this.snoring_sound.pause(); // Ensure snoring stops when dead
+                this.snoring_sound.pause();
                 return; // Stop idle animations if dead
             }
 
@@ -174,16 +170,16 @@ class Character extends MoveableObject {
     }
 
     playDeadAnimationOnce() {
-        this.animationStarted = true; // Ensure this method is only triggered once
+        this.animationStarted = true;
         let currentImageIndex = 0;
         const interval = setInterval(() => {
             if (currentImageIndex < this.IMAGES_DEAD.length) {
                 this.loadImage(this.IMAGES_DEAD[currentImageIndex]);
                 currentImageIndex++;
             } else {
-                clearInterval(interval); // Stop the interval when the last image is shown
+                clearInterval(interval);
             }
-        }, 150); // Adjust the timing here to fit the desired animation speed
+        }, 150);
     }
 
     

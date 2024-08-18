@@ -19,15 +19,38 @@ class MoveableObject extends DrawableObjekt {
 
 
         isAboveGround() {
+            if (this instanceof ThrowableObject) {
+                return true;
+            } else {
             return this.y < 150;
+            }
         }
 
 
-        isColliding(moveableObject) {   
-            return this.x + this.width > moveableObject.x &&
-                   this.y + this.height > moveableObject.y &&
-                   this.x < moveableObject.x + moveableObject.width &&
-                   this.y < moveableObject.y + moveableObject.height;
+        isColliding(moveableObject) {
+            const { bufferX, bufferY } = this.getCollisionBuffer(moveableObject);
+        
+            return this.x + this.width - bufferX > moveableObject.x + bufferX &&
+                   this.y + this.height - bufferY > moveableObject.y + bufferY &&
+                   this.x + bufferX < moveableObject.x + moveableObject.width - bufferX &&
+                   this.y + bufferY < moveableObject.y + moveableObject.height - bufferY;
+        }
+        
+        getCollisionBuffer(moveableObject) {
+            let bufferX = 30;
+            let bufferY = 10;
+
+            if (moveableObject instanceof Coin) {
+                bufferX = 20;
+                bufferY = 50;
+            } else if (moveableObject instanceof Chicken_Normal) {
+                bufferX = 20;
+                bufferY = 15;
+            } else if (moveableObject instanceof Chicken_Small) {
+                bufferX = 25;
+                bufferY = 10;
+            }
+            return { bufferX, bufferY };
         }
 
 

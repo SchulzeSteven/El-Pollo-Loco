@@ -7,12 +7,15 @@ class World {
     camera_x = 0;
     showFrames = false;
     statusBar = new StatusBar();
+    throwableObjects = [];
+    throw_sound = new Audio('./audio/throw.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.initializeWorld();
+        this.throw_sound.volume = throwSoundVolume;
     }
 
 
@@ -38,6 +41,8 @@ class World {
             }
             this.checkEnemyCollisions();
             this.checkCoinCollisions();
+            this.checkBottleCollisions();
+            this.checkThrowObjects();
     
         }, 250);
     }
@@ -59,7 +64,6 @@ class World {
     
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
-                console.log('Coin collected at position:', coin.x, coin.y);
                 collectedCoins.push(index);
                 this.statusBar.setCoinCount(this.statusBar.coinCount + 1);
             }
@@ -67,6 +71,37 @@ class World {
         collectedCoins.reverse().forEach(index => {
             this.level.coins.splice(index, 1);
         });
+    }
+
+
+    checkBottleCollisions() {
+        let collectedBottles = [];
+    
+        this.level.bottles.forEach((bottle, index) => {
+            if (this.character.isColliding(bottle)) {
+                collectedBottles.push(index);
+                this.statusBar.setBottleCount(this.statusBar.bottleCount + 1); // Erhöht die Anzahl der Flaschen nach dem Einsammeln
+            }
+        });
+    
+        collectedBottles.reverse().forEach(index => {
+            this.level.bottles.splice(index, 1);
+        });
+    }
+
+
+    checkThrowObjects() {
+        if (this.keyboard.D && this.statusBar.bottleCount > 0) {
+            let direction = this.character.otherDirection ? 'left' : 'right';
+            let offsetX = direction === 'right' ? 60 : -30; // Passe den Offset für links an
+    
+            let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
+            bottle.world = this; // Weisen Sie die Welt zu
+            this.throwableObjects.push(bottle);
+            this.statusBar.setBottleCount(this.statusBar.bottleCount - 1); // Reduziert die Anzahl der Flaschen nach dem Wurf
+    
+            this.throw_sound.play(); // Spielt den Wurfsound ab
+        }
     }
 
 
@@ -86,6 +121,7 @@ class World {
 
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
 
         // Draw() wird immer wieder aufgerufen
