@@ -23,13 +23,11 @@ class MoveableObject extends DrawableObjekt {
         }
 
 
-        isColliding(moveableobject) {
-            let offset = 15;
-                
-            return this.x + this.width - offset > moveableobject.x + offset &&
-                this.y + this.height - offset > moveableobject.y + offset &&
-                this.x + offset < moveableobject.x + moveableobject.width - offset &&
-                this.y + offset < moveableobject.y + moveableobject.height - offset;
+        isColliding(moveableObject) {   
+            return this.x + this.width > moveableObject.x &&
+                   this.y + this.height > moveableObject.y &&
+                   this.x < moveableObject.x + moveableObject.width &&
+                   this.y < moveableObject.y + moveableObject.height;
         }
 
 
@@ -55,11 +53,11 @@ class MoveableObject extends DrawableObjekt {
 
         calculateDamage(enemy) {
             if (enemy instanceof Chicken_Small) {
-                return 5;
-            } else if (enemy instanceof Chicken_Normal) {
                 return 10;
+            } else if (enemy instanceof Chicken_Normal) {
+                return 15;
             }
-            return 20; // Standard-Schaden für andere Feinde
+            return 25; // Standard-Schaden für andere Feinde
         }
 
 

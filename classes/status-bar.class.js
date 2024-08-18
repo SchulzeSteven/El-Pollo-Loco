@@ -1,16 +1,21 @@
 class StatusBar extends DrawableObjekt {
     constructor() {
         super();
-        this.loadImage('./assets/img/7_statusbars/3_icons/icon_health.png');  // Lädt das Herz-Symbol
-        this.coinImg = new Image();  // Bild für das Münz-Symbol
+        this.loadImage('./assets/img/7_statusbars/3_icons/icon_health.png');
+
+        this.coinImg = new Image();
         this.coinImg.src = 'assets/img/7_statusbars/3_icons/icon_coin.png';
 
-        this.x = 20;
+        this.bottleImg = new Image();
+        this.bottleImg.src = 'assets/img/7_statusbars/3_icons/icon_salsa_bottle.png';
+
+        this.x = 5;
         this.y = 5;
-        this.width = 50;  // Breite des Herz-Symbols und Münz-Symbols
-        this.height = 50; // Höhe des Herz-Symbols und Münz-Symbols
-        this.lifePercentage = 100;  // Startwert für Lebenspunkte in Prozent
-        this.coinCount = 0;  // Startwert für die Anzahl der Münzen
+        this.width = 50; 
+        this.height = 50; 
+        this.lifePercentage = 100;
+        this.coinCount = 0;
+        this.bottleCount = 0;
     }
 
     setPercentage(lifePercentage) {
@@ -21,19 +26,27 @@ class StatusBar extends DrawableObjekt {
         this.coinCount = coinCount;
     }
 
+    setBottleCount(bottleCount) {
+        this.bottleCount = bottleCount;
+    }
+
     draw(ctx) {
         // Zeichnet das Herz-Symbol und den Lebens-Prozentsatz
         super.draw(ctx);
         this.drawText(ctx, this.lifePercentage, this.x + this.width + 0, this.y + this.height / 2 + 17);
 
         // Zeichnet das Münz-Symbol und die Anzahl der Münzen
-        ctx.drawImage(this.coinImg, this.x, this.y + this.height + 0, this.width, this.height);  // 10px Abstand unter dem Herz-Symbol
-        this.drawText(ctx, this.coinCount, this.x + this.width + 0, this.y + this.height * 1.5 + 15);  // Text unter dem Münz-Symbol
+        ctx.drawImage(this.coinImg, this.x, this.y + this.height + 10, this.width, this.height);
+        this.drawText(ctx, this.coinCount, this.x + this.width + 0, this.y + this.height * 1.5 + 26);
+
+        // Zeichnet das Salsa-Flaschen-Symbol und die Anzahl der Flaschen
+        ctx.drawImage(this.bottleImg, this.x, this.y + this.height * 2 + 20, this.width, this.height);
+        this.drawText(ctx, this.bottleCount, this.x + this.width + 0, this.y + this.height * 2.5 + 35);
     }
 
     drawText(ctx, text, x, y) {
-        ctx.font = '40px zabars';  // Schriftart und -größe
-        ctx.fillStyle = 'black';  // Textfarbe
+        ctx.font = '40px zabars';  
+        ctx.fillStyle = 'black';
 
         // Weißer Schatten für den Text
         ctx.shadowColor = 'white';  // Farbe des Schattens

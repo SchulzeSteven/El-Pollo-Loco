@@ -12,6 +12,11 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.initializeWorld();
+    }
+
+
+    initializeWorld() {
         this.draw();
         this.setWorld();
         this.checkCollisions();
@@ -19,16 +24,6 @@ class World {
     }
 
     
-    setupFrameToggle() {
-        window.addEventListener('keydown', (event) => {
-            if (event.key === '#') {
-                this.showFrames = !this.showFrames;  // Zustand umschalten
-                console.log(`Frame drawing is now ${this.showFrames ? 'enabled' : 'disabled'}`);
-            }
-        });
-    }
-
-
     setWorld() {
         this.character.world = this;
     }
@@ -37,35 +32,56 @@ class World {
     checkCollisions() {
         const collisionInterval = setInterval(() => {
             if (this.character.isDead()) {
-                clearInterval(collisionInterval);  // Stoppt die Kollisionserkennung, wenn der Charakter tot ist
+                clearInterval(collisionInterval);
                 console.log('Character is dead, collisions disabled.');
                 return;
             }
-
-            this.level.enemies.forEach((enemy) => {
-                // Kollision nur überprüfen, wenn der Charakter nicht verletzt ist
-                if (!this.character.isHurt() && this.character.isColliding(enemy)) {
-                    this.character.hit(enemy);  // Übergibt den enemy an die hit()-Methode des Characters
-                    this.statusBar.setPercentage(this.character.life);
-                    console.log('Collision with Character', this.character.life);
-                }
-            });
+            this.checkEnemyCollisions();
+            this.checkCoinCollisions();
+    
         }, 250);
+    }
+
+
+    checkEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (!this.character.isHurt() && this.character.isColliding(enemy)) {
+                this.character.hit(enemy);
+                this.statusBar.setPercentage(this.character.life);
+                console.log('Collision with Character', this.character.life);
+            }
+        });
+    }
+
+
+    checkCoinCollisions() {
+        let collectedCoins = [];
+    
+        this.level.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                console.log('Coin collected at position:', coin.x, coin.y);
+                collectedCoins.push(index);
+                this.statusBar.setCoinCount(this.statusBar.coinCount + 1);
+            }
+        });
+        collectedCoins.reverse().forEach(index => {
+            this.level.coins.splice(index, 1);
+        });
     }
 
 
     draw() {
         this.clearCanvas();
         this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
-        this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
 
         this.ctx.translate(-this.camera_x, 0);
 
         // ----------- Space for fixed objects -----------//
-        this.addToMap(this.statusBar);  // Zeichnet die StatusBar unabhängig von der Kamera-Position
+        this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
 
         this.addToMap(this.character);
@@ -102,6 +118,7 @@ class World {
         }
     }
 
+
     flipImage(moveableobject) {
         this.ctx.save();
         this.ctx.translate(moveableobject.width, 0);
@@ -109,12 +126,24 @@ class World {
         moveableobject.x = moveableobject.x * -1;
     }
 
+
     flipImageBack(moveableobject) {
         moveableobject.x = moveableobject.x * -1;
         this.ctx.restore();
     }
 
+
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+
+    setupFrameToggle() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === '#') {
+                this.showFrames = !this.showFrames;  // Zustand umschalten
+                console.log(`Frame drawing is now ${this.showFrames ? 'enabled' : 'disabled'}`);
+            }
+        });
     }
 }
