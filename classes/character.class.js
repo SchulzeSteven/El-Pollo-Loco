@@ -91,6 +91,11 @@ class Character extends MoveableObject {
         this.applyGravity();
         this.animate();
         this.setIdleTimers();
+
+        this.walking_sound.volume = 0;
+        this.jumping_sound.volume = 0;
+        this.snoring_sound.volume = 0;
+        this.hurting_sound.volume = 0;
     }
 
 
@@ -168,6 +173,15 @@ class Character extends MoveableObject {
             }
         }, 200);
     }
+
+
+    enableSounds() {
+        this.walking_sound.volume = 1;
+        this.jumping_sound.volume = 1;
+        this.snoring_sound.volume = 1;
+        this.hurting_sound.volume = 1;
+    }
+    
 
     playDeadAnimationOnce() {
         this.animationStarted = true;
