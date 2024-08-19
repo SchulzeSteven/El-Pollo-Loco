@@ -6,32 +6,39 @@ class Coin extends MoveableObject {
         './assets/img/8_coin/coin_1.png',
         './assets/img/8_coin/coin_2.png'
     ];
-    
-    static lastX = 0;
-    static minSpacing = 150;
 
-
-    constructor() {
+    constructor(x, y) {
         super().loadImage('./assets/img/8_coin/coin_1.png');
         this.loadImages(this.IMAGES_MOVING);
-        this.setRandomXPosition();
+        this.x = x;
+        this.y = y;
         this.animate();
     }
 
-
-    setRandomXPosition() {
-        let minX = Coin.lastX + Coin.minSpacing;
-        let maxX = 0 + Math.random() * 1600;
-        this.x = Math.max(minX, maxX);
-        this.y = 60 + Math.random() * 220;
-        Coin.lastX = this.x;
-    }
-
-
     animate() {
-        setInterval( () => {
-        this.playAnimation(this.IMAGES_MOVING);
+        setInterval(() => {
+            this.playAnimation(this.IMAGES_MOVING);
         }, 200);
     }
 
+    static createCoinArc(startX, startY, arcHeight, arcWidth) {
+        let coins = [];
+        let numCoins = Coin.getRandomInt(3, 6); // Zufällige Anzahl der Münzen zwischen 3 und 6
+    
+        // Anpassung der Bogenbreite basierend auf der Anzahl der Münzen
+        let adjustedArcWidth = arcWidth + (numCoins - 3) * 50; // Mehr Münzen -> breiterer Bogen
+    
+        for (let i = 0; i < numCoins; i++) {
+            let x = startX + (i * (adjustedArcWidth / (numCoins - 1)));
+            let y = startY - Math.sin((i / (numCoins - 1)) * Math.PI) * arcHeight;
+            let coin = new Coin(x, y);
+            coins.push(coin);
+        }
+
+        return coins;
+    }
+
+    static getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 }

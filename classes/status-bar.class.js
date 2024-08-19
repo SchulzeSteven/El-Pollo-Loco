@@ -18,45 +18,61 @@ class StatusBar extends DrawableObjekt {
         this.bottleCount = 0;
     }
 
+
     setPercentage(lifePercentage) {
         this.lifePercentage = lifePercentage;
     }
+
 
     setCoinCount(coinCount) {
         this.coinCount = coinCount;
     }
 
+
     setBottleCount(bottleCount) {
         this.bottleCount = bottleCount;
     }
 
+
     draw(ctx) {
-        // Zeichnet das Herz-Symbol und den Lebens-Prozentsatz
-        super.draw(ctx);
-        this.drawText(ctx, this.lifePercentage, this.x + this.width + 0, this.y + this.height / 2 + 17);
-
-        // Zeichnet das Münz-Symbol und die Anzahl der Münzen
-        ctx.drawImage(this.coinImg, this.x, this.y + this.height + 10, this.width, this.height);
-        this.drawText(ctx, this.coinCount, this.x + this.width + 0, this.y + this.height * 1.5 + 26);
-
-        // Zeichnet das Salsa-Flaschen-Symbol und die Anzahl der Flaschen
-        ctx.drawImage(this.bottleImg, this.x, this.y + this.height * 2 + 20, this.width, this.height);
-        this.drawText(ctx, this.bottleCount, this.x + this.width + 0, this.y + this.height * 2.5 + 35);
+        this.drawLife(ctx);
+        this.drawCoins(ctx);
+        this.drawBottles(ctx);
     }
+
+    drawLife(ctx) {
+        super.draw(ctx);
+        this.drawText(ctx, this.lifePercentage, this.x + this.width, this.y + this.height / 2 + 17);
+    }
+
+    drawCoins(ctx) {
+        ctx.drawImage(this.coinImg, this.x, this.y + this.height + 10, this.width, this.height);
+        this.drawText(ctx, this.coinCount, this.x + this.width, this.y + this.height * 1.5 + 26);
+    }
+
+    drawBottles(ctx) {
+        ctx.drawImage(this.bottleImg, this.x, this.y + this.height * 2 + 20, this.width, this.height);
+        this.drawText(ctx, this.bottleCount, this.x + this.width, this.y + this.height * 2.5 + 35);
+    }
+
 
     drawText(ctx, text, x, y) {
         ctx.font = '40px zabars';  
         ctx.fillStyle = 'black';
-
-        // Weißer Schatten für den Text
-        ctx.shadowColor = 'white';  // Farbe des Schattens
-        ctx.shadowOffsetX = 2;  // Horizontaler Versatz des Schattens
-        ctx.shadowOffsetY = 2;  // Vertikaler Versatz des Schattens
-
-        // Text wird mit den angegebenen Koordinaten gezeichnet
+        this.setTextShadow(ctx, 'white', 2, 2);
         ctx.fillText(`${text}`, x, y);
+        this.resetTextShadow(ctx);
+    }
 
-        // Schatten zurücksetzen, um unerwünschte Effekte auf andere Zeichnungen zu vermeiden
+
+    setTextShadow(ctx, color, offsetX, offsetY, blur = 0) {
+        ctx.shadowColor = color;
+        ctx.shadowOffsetX = offsetX;
+        ctx.shadowOffsetY = offsetY;
+        ctx.shadowBlur = blur;
+    }
+    
+    resetTextShadow(ctx) {
         ctx.shadowColor = 'transparent';
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
