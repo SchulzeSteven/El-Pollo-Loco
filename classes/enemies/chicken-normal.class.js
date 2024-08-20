@@ -2,6 +2,7 @@ class Chicken_Normal extends MoveableObject {
 
     height = 75;
     width = 75;
+    hitsToKill = 2;
     IMAGES_WALKING = [
         './assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         './assets/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
@@ -31,6 +32,18 @@ class Chicken_Normal extends MoveableObject {
         }, 200);
     }
 
+    takeHit() {
+        this.hitsToKill--;  // Trefferanzahl um 1 reduzieren
+        console.log(`Chicken_Normal getroffen, verbleibende Treffer: ${this.hitsToKill}`);
+        if (this.hitsToKill <= 0) {
+            this.removeChicken(); // Entfernt das Huhn nach zwei Treffern
+        }
+    }
+
+    removeChicken() {
+        console.log('Chicken_Normal entfernt');
+        this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
+    }
     checkMovement() {
         if (!this.movementStarted && (keyboard.LEFT || keyboard.RIGHT)) {
             this.movementStarted = true; // Bewegung als gestartet markieren

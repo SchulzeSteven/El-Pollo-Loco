@@ -74,6 +74,8 @@ class Character extends MoveableObject {
     isIdle = false;
     isLongIdle = false;
     animationStarted = false;
+    lastBounceTime = 0;
+    bounceCooldown = 250;
 
     constructor(audioManager) {
         super().loadImage('./assets/img/2_character_pepe/2_walk/W-21.png');
@@ -88,6 +90,36 @@ class Character extends MoveableObject {
         this.animate();
         this.setIdleTimers();
         this.setRedFrameOffset(110, 25, 10, 12);
+    }
+
+
+    checkCollisionsWithChickens(chickens) {
+        // Keine Kollisionsprüfung, wenn der Charakter tot ist
+        if (this.isDead()) {
+            return;
+        }
+
+        let currentTime = new Date().getTime();
+
+        if (currentTime - this.lastBounceTime < this.bounceCooldown) {
+            return; // Wenn der letzte Bounce zu kürzlich war, keine weitere Kollision
+        }
+
+        let chickenHit = false;
+
+        for (let chicken of chickens) {
+            if (this.isCollidingTop(chicken) && !chickenHit) {
+                this.bounceOff(); // Der Charakter springt zurück, wenn er von oben auf das Huhn springt
+                chicken.takeHit(); // Das Huhn nimmt einen Treffer
+                chickenHit = true; // Markiert, dass ein Huhn getroffen wurde
+                this.lastBounceTime = currentTime; // Aktualisiert die Zeit des letzten Bounces
+                break; // Beendet die Schleife, sodass nur ein Huhn getroffen wird
+            } 
+            // Seitliche Kollisionen deaktivieren, wenn gerade ein Bounce erfolgt ist
+            else if (this.isColliding(chicken) && !this.isHurt() && !chickenHit) {
+                this.hit(chicken); // Normale Kollision, wenn nicht von oben und nicht verletzt
+            }
+        }
     }
 
     animate() {
@@ -129,6 +161,10 @@ class Character extends MoveableObject {
 
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
+
+        setInterval(() => {
+            this.checkCollisionsWithChickens(this.world.level.enemies.filter(enemy => enemy instanceof Chicken_Normal || enemy instanceof Chicken_Small));
+        }, 25);
 
         /* JUMP and WALK Timers */
         setInterval(() => {
@@ -202,5 +238,17 @@ class Character extends MoveableObject {
         this.applyDamage(damage);
         this.audioManager.play('hurting');
         console.log(`Character hit by ${enemy.constructor.name}, received ${damage} damage. Remaining life: ${this.life}`);
+        this.lastHit = new Date().getTime(); // Zeitpunkt des letzten Treffers aktualisieren
+        this.world.statusBar.setPercentage(this.life); // Aktualisiert die Lebensleiste
+    }
+
+    isHurt() {
+        // Überprüfen, ob die Hurt-Animation noch aktiv ist
+        let timepassed = new Date().getTime() - this.lastHit;
+        return timepassed < this.getHurtDuration();
+    }
+
+    getHurtDuration() {
+        return this.IMAGES_HURT.length * 350; // Dauer der Hurt-Animation in Millisekunden (100ms pro Bild)
     }
 }

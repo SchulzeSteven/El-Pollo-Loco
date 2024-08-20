@@ -2,6 +2,7 @@ class Chicken_Small extends MoveableObject {
 
     height = 45;
     width = 45;
+    hitsToKill = 1;
     IMAGES_WALKING = [
         './assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
         './assets/img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
@@ -29,6 +30,18 @@ class Chicken_Small extends MoveableObject {
         setInterval(() => {
             this.playAnimation(this.IMAGES_WALKING);
         }, 200);
+    }
+
+    takeHit() {
+        this.hitsToKill--;
+        console.log(`Chicken_Small getroffen, verbleibende Treffer: ${this.hitsToKill}`);
+        if (this.hitsToKill <= 0) {
+            this.removeChicken();
+        }
+    }
+
+    removeChicken() {
+        this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
     }
 
     checkMovement() {

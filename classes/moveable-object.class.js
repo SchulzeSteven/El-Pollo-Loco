@@ -13,6 +13,7 @@ class MoveableObject extends DrawableObjekt {
                 if(this.isAboveGround() || this.speedY > 0) {
                     this.y -= this.speedY;
                     this.speedY -= this.acceleration;
+                    this.checkIfLanded();
                 }
             }, 1000 / 25);
         }
@@ -27,6 +28,14 @@ class MoveableObject extends DrawableObjekt {
         }
 
 
+        checkIfLanded() {
+            if (!(this instanceof ThrowableObject) && this.y >= 150) {
+                this.y = 150;
+                this.speedY = 0;
+            }
+        }
+
+
         isColliding(moveableObject) {
             const redFrame1 = this.getRedFrame();
             const redFrame2 = moveableObject.getRedFrame();
@@ -36,6 +45,19 @@ class MoveableObject extends DrawableObjekt {
                    redFrame1.y < redFrame2.y + redFrame2.height &&
                    redFrame1.y + redFrame1.height > redFrame2.y;
         }
+
+
+        isCollidingTop(moveableObject) {
+            const redFrame1 = this.getRedFrame();
+            const redFrame2 = moveableObject.getRedFrame();
+    
+            // Prüfen, ob der untere Rand des Charakters den oberen Rand des Huhns berührt
+            return redFrame1.y + redFrame1.height >= redFrame2.y &&
+                   redFrame1.y + redFrame1.height <= redFrame2.y + redFrame2.height / 2 &&
+                   redFrame1.x < redFrame2.x + redFrame2.width &&
+                   redFrame1.x + redFrame1.width > redFrame2.x;
+        }
+
     
         getRedFrame() {
             const { top, right, bottom, left } = this.redFrameOffset;
@@ -106,5 +128,10 @@ class MoveableObject extends DrawableObjekt {
 
         jump() {
             this.speedY = 27;
+        }
+
+
+        bounceOff() {
+            this.speedY = 25; // Bounce-Effekt
         }
 }
