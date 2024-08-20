@@ -21,7 +21,7 @@ class Bottle extends MoveableObject {
 
     setRandomXPosition() {
         let minX = Bottle.lastX + Bottle.minSpacing;
-        let maxX = -50 + Math.random() * 1200;
+        let maxX = -70 + Math.random() * 1150;
         this.x = Math.max(minX, maxX);
         this.y = 350;
         Bottle.lastX = this.x;

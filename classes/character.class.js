@@ -77,7 +77,7 @@ class Character extends MoveableObject {
     longIdleInterval;
     isIdle = false;
     isLongIdle = false;
-    animationStarted = false; // Flag to ensure IMAGES_DEAD is played only once
+    animationStarted = false;
 
 
     constructor() {
@@ -105,7 +105,7 @@ class Character extends MoveableObject {
                 this.walking_sound.pause();
                 this.jumping_sound.pause();
                 this.snoring_sound.pause();
-                return; // Stop further animation if dead
+                return;
             }
 
             this.walking_sound.pause();
@@ -143,10 +143,12 @@ class Character extends MoveableObject {
         setInterval(() => {
             if (this.isDead()) {
                 if (!this.animationStarted) {
-                    this.playDeadAnimationOnce(); // Play IMAGES_DEAD once
+                    this.playDeadAnimationOnce();
                 } 
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
+                this.resetIdleTimers();
+                this.snoring_sound.pause();
             } else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
@@ -158,7 +160,7 @@ class Character extends MoveableObject {
         setInterval(() => {
             if (this.isDead()) {
                 this.snoring_sound.pause();
-                return; // Stop idle animations if dead
+                return;
             }
 
             if (!this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {

@@ -70,8 +70,10 @@ canvas {
 .mute-btn {
     cursor: pointer;
     position: absolute;
-    top: 3%;
-    right: 3%;
-    background-color: transparent;
+    top: 10%;
+    right: 0;
+    transform: translate(-50%, -50%);
     border: none;
+    background: transparent;
+    z-index: 100;
 }
