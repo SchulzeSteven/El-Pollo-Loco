@@ -29,7 +29,7 @@ class ThrowableObject extends MoveableObject {
     }
 
     throw() {
-        this.speedY = 30;
+        this.speedY = 25;
         this.applyGravity();
 
         // Animation für das Werfen abspielen
@@ -44,7 +44,7 @@ class ThrowableObject extends MoveableObject {
             if (this.y >= 350 && !this.isOnGround) { // Überprüfen, ob die Flasche den Boden erreicht hat
                 this.onGround();
             } else {
-                this.x += this.direction === 'right' ? 10 : -10; // Bewegung nach rechts oder links
+                this.x += this.direction === 'right' ? 12 : -12; // Bewegung nach rechts oder links
             }
         }, 25);
     }

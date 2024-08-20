@@ -13,6 +13,7 @@ class Coin extends MoveableObject {
         this.x = x;
         this.y = y;
         this.animate();
+        this.setRedFrameOffset(20, 20, 20, 20);
     }
 
     animate() {
@@ -35,6 +36,16 @@ class Coin extends MoveableObject {
             coins.push(coin);
         }
 
+        return coins;
+    }
+
+    static createCoinLine(startX, startY, numCoins) {
+        let coins = [];
+        for (let i = 0; i < numCoins; i++) {
+            let y = startY - i * 40; // Abstand zwischen den Münzen, kann angepasst werden
+            let coin = new Coin(startX, y);
+            coins.push(coin);
+        }
         return coins;
     }
 

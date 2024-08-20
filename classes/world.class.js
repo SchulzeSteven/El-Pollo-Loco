@@ -1,5 +1,5 @@
 class World {
-    character = new Character();
+    character;
     level = level1;
     canvas;
     ctx;
@@ -8,7 +8,7 @@ class World {
     showFrames = false;
     statusBar = new StatusBar();
     throwableObjects = [];
-    throw_sound = new Audio('./audio/throw.mp3');
+    throw_sound;
     endbossMovementStarted = false;
     throwCooldown = false;
     isMuted = false;
@@ -23,14 +23,16 @@ class World {
     muteIconOn = new Image();
     muteIconOff = new Image();
 
-    constructor(canvas, keyboard) {
+    constructor(canvas, keyboard, audioManager) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.audioManager = audioManager;
         this.muteIconOn.src = './assets/img/icons/volume-on.png';
         this.muteIconOff.src = './assets/img/icons/volume-off.png';
+        this.character = new Character(audioManager);
+        this.throw_sound = this.audioManager.sounds.throwing;  // Verwendet den AudioManager
         this.initializeWorld();
-        this.throw_sound.volume = throwSoundVolume;
         this.setupCanvasClickListener();
     }
 
@@ -44,7 +46,6 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        this.character.enableSounds();
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
         });
@@ -104,12 +105,12 @@ class World {
         if (this.keyboard.D && this.statusBar.bottleCount > 0 && !this.throwCooldown) {
             let direction = this.character.otherDirection ? 'left' : 'right';
             let offsetX = direction === 'right' ? 60 : -30;
-        
+
             let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
             this.statusBar.setBottleCount(this.statusBar.bottleCount - 1);
-            this.throw_sound.play();
+            this.audioManager.play('throwing');
             this.activateThrowCooldown();
         }
     }
@@ -154,16 +155,8 @@ class World {
 
     toggleMute() {
         this.isMuted = !this.isMuted;
-        this.updateSoundVolume();
+        this.isMuted ? this.audioManager.muteAll() : this.audioManager.unmuteAll();
         this.drawMuteButton();
-    }
-
-    updateSoundVolume() {
-        let volume = this.isMuted ? 0 : 1;
-        this.character.walking_sound.volume = volume;
-        this.character.jumping_sound.volume = volume;
-        this.character.hurting_sound.volume = volume;
-        this.throw_sound.volume = volume * throwSoundVolume;
     }
 
     drawMuteButton() {
@@ -243,3 +236,4 @@ class World {
         });
     }
 }
+

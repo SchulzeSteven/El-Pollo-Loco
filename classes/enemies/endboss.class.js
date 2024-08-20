@@ -44,6 +44,7 @@ class Endboss extends MoveableObject {
         this.x = 3050;
         this.y = 55;
         this.animate();
+        this.setRedFrameOffset(50, 10, 10, 25);
     }
 
     animate() {

@@ -1,24 +1,23 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let throwSoundVolume = 0.1;  // Lautstärke für den Wurfsound
+let audioManager = new AudioManager();  // Neuer AudioManager
 
 function init() {
     canvas = document.getElementById("canvas");
-    // World wird nicht initialisiert, bevor das Spiel gestartet wird
+    // Das Spiel wird erst gestartet, wenn der Benutzer auf "Start" klickt
 }
 
 function startGame() {
     document.getElementById('start').style.display = 'none'; // Startbildschirm ausblenden
     document.getElementById('canvas').style.display = 'block'; // Canvas anzeigen
 
-    // Jetzt die World instanziieren und das Spiel starten
-    world = new World(canvas, keyboard);
+    // Welt und Spielinstanzen werden erstellt
+    world = new World(canvas, keyboard, audioManager);
 
-    // Event-Listener initialisieren
+    // Event-Listener für Tastatureingaben initialisieren
     initEventListeners();
 }
-
 
 function initEventListeners() {
     document.addEventListener("keydown", (event) => {

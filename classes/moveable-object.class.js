@@ -28,29 +28,23 @@ class MoveableObject extends DrawableObjekt {
 
 
         isColliding(moveableObject) {
-            const { bufferX, bufferY } = this.getCollisionBuffer(moveableObject);
-        
-            return this.x + this.width - bufferX > moveableObject.x + bufferX &&
-                   this.y + this.height - bufferY > moveableObject.y + bufferY &&
-                   this.x + bufferX < moveableObject.x + moveableObject.width - bufferX &&
-                   this.y + bufferY < moveableObject.y + moveableObject.height - bufferY;
+            const redFrame1 = this.getRedFrame();
+            const redFrame2 = moveableObject.getRedFrame();
+    
+            return redFrame1.x < redFrame2.x + redFrame2.width &&
+                   redFrame1.x + redFrame1.width > redFrame2.x &&
+                   redFrame1.y < redFrame2.y + redFrame2.height &&
+                   redFrame1.y + redFrame1.height > redFrame2.y;
         }
-        
-        getCollisionBuffer(moveableObject) {
-            let bufferX = 30;
-            let bufferY = 10;
-
-            if (moveableObject instanceof Coin) {
-                bufferX = 20;
-                bufferY = 50;
-            } else if (moveableObject instanceof Chicken_Normal) {
-                bufferX = 20;
-                bufferY = 15;
-            } else if (moveableObject instanceof Chicken_Small) {
-                bufferX = 25;
-                bufferY = 10;
-            }
-            return { bufferX, bufferY };
+    
+        getRedFrame() {
+            const { top, right, bottom, left } = this.redFrameOffset;
+            return {
+                x: this.x + left,
+                y: this.y + top,
+                width: this.width - left - right,
+                height: this.height - top - bottom
+            };
         }
 
 

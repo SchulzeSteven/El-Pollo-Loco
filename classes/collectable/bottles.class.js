@@ -16,12 +16,13 @@ class Bottle extends MoveableObject {
         this.loadImages(this.IMAGES_ONGROUND);
         this.setRandomXPosition();
         this.setRandomImage();
+        this.setRedFrameOffset(12, 20, 5, 20);
     }
 
 
     setRandomXPosition() {
         let minX = Bottle.lastX + Bottle.minSpacing;
-        let maxX = -70 + Math.random() * 1150;
+        let maxX = -150 + Math.random() * 1150;
         this.x = Math.max(minX, maxX);
         this.y = 350;
         Bottle.lastX = this.x;
