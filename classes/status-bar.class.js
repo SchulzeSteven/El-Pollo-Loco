@@ -1,4 +1,13 @@
 class StatusBar extends DrawableObjekt {
+    IMAGES_ENDBOSS = [
+        './assets/img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/blue/blue20.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/blue/blue40.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/blue/blue60.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/blue/blue80.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
+    ];
+
     constructor() {
         super();
         this.loadImage('./assets/img/7_statusbars/3_icons/icon_health.png');
@@ -16,6 +25,9 @@ class StatusBar extends DrawableObjekt {
         this.lifePercentage = 100;
         this.coinCount = 0;
         this.bottleCount = 0;
+        this.shouldDrawEndboss = false;
+        this.endbossWidth = 180;
+        this.endbossHeight = 60;
     }
 
 
@@ -34,10 +46,30 @@ class StatusBar extends DrawableObjekt {
     }
 
 
+    setEndbossSize(width, height) {
+        this.endbossWidth = width;
+        this.endbossHeight = height;
+    }
+
+
     draw(ctx) {
         this.drawLife(ctx);
         this.drawCoins(ctx);
         this.drawBottles(ctx);
+        if (this.shouldDrawEndboss) {
+            this.drawEndboss(ctx);
+        }
+    }
+
+    drawEndboss(ctx) {
+        const endbossImg = this.imageCache[this.IMAGES_ENDBOSS[5]];  // Wähle das letzte Bild aus der Liste
+        const canvasWidth = ctx.canvas.width;
+        ctx.drawImage(endbossImg, canvasWidth - this.endbossWidth - 120, this.y, this.endbossWidth, this.endbossHeight);
+    }
+
+    enableEndbossDisplay() {
+        this.shouldDrawEndboss = true;
+        this.loadImages(this.IMAGES_ENDBOSS);  // Lade die Bilder, wenn sie noch nicht geladen sind
     }
 
     drawLife(ctx) {

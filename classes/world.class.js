@@ -135,6 +135,7 @@ class World {
             if (this.character.x >= 2700 && endboss && !this.endbossMovementStarted) {
                 this.endbossMovementStarted = true;
                 endboss.startMovingLeft();
+                this.statusBar.enableEndbossDisplay();  // Endboss-Bild anzeigen
             }
         }, 1000 / 60);
     }
