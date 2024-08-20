@@ -26,25 +26,23 @@ class ThrowableObject extends MoveableObject {
         this.width = 75;
         this.direction = direction; // Speichert die Richtung des Wurfs
         this.throw();
+        this.setRedFrameOffset(10, 10, 10, 10);  // Passe die Offsets für den roten Rahmen an
     }
 
     throw() {
         this.speedY = 25;
         this.applyGravity();
-
-        // Animation für das Werfen abspielen
         this.animationInterval = setInterval(() => {
-            if (!this.isOnGround) { // Animation nur abspielen, wenn nicht am Boden
+            if (!this.isOnGround) {
                 this.playAnimation(this.IMAGES_THROWING);
             }
         }, 100);
 
-        // Bewegung der Flasche basierend auf der Blickrichtung des Charakters
         this.moveInterval = setInterval(() => {
-            if (this.y >= 350 && !this.isOnGround) { // Überprüfen, ob die Flasche den Boden erreicht hat
+            if (this.y >= 350 && !this.isOnGround) {
                 this.onGround();
             } else {
-                this.x += this.direction === 'right' ? 12 : -12; // Bewegung nach rechts oder links
+                this.x += this.direction === 'right' ? 12 : -12;
             }
         }, 25);
     }
@@ -63,6 +61,13 @@ class ThrowableObject extends MoveableObject {
         const index = this.world.throwableObjects.indexOf(this);
         if (index > -1) {
             this.world.throwableObjects.splice(index, 1); // Entferne die Flasche aus dem Array
+        }
+    }
+
+    draw(ctx) {
+        super.draw(ctx);
+        if (this.world.showFrames) {
+            this.drawFrame(ctx);  // Zeichne den Rahmen, wenn die showFrames-Option aktiviert ist
         }
     }
 }

@@ -34,13 +34,13 @@ class Chicken_Small extends MoveableObject {
 
     takeHit() {
         this.hitsToKill--;
-        console.log(`Chicken_Small getroffen, verbleibende Treffer: ${this.hitsToKill}`);
         if (this.hitsToKill <= 0) {
             this.removeChicken();
         }
     }
 
     removeChicken() {
+        console.log('Chicken_Small entfernt');
         this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
     }
 

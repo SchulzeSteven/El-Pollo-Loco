@@ -36,7 +36,7 @@ class DrawableObjekt {
 
 
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken_Normal || this instanceof Chicken_Small || this instanceof Endboss || this instanceof Coin || this instanceof Bottle) {
+        if (this instanceof Character || this instanceof Chicken_Normal || this instanceof Chicken_Small || this instanceof Endboss || this instanceof Coin || this instanceof Bottle || this instanceof ThrowableObject) {
             // Blauer äußerer Rahmen
             ctx.beginPath();
             ctx.lineWidth = '2';
