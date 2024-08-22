@@ -56,6 +56,8 @@ class Endboss extends MoveableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.x = 3050;
         this.y = 55;
+        this.hitsToKill = 5;
+        this.life = 100;
         this.animate();
         this.setRedFrameOffset(50, 10, 10, 25);
     }
@@ -88,6 +90,27 @@ class Endboss extends MoveableObject {
             setTimeout(() => {
                 this.isAttacking = false;
             }, this.IMAGES_ATTACK.length * 100);  // Attacke dauert so lange wie die Animation, schnellerer Takt (100ms)
+        }
+    }
+
+    takeHit() {
+        this.life -= 20;  // Reduziert die Lebenspunkte um 20 pro Treffer
+        console.log(`Endboss getroffen, verbleibende Lebenspunkte: ${this.life}`);
+
+        if (this.life <= 0) {
+            this.removeEndboss();  // Entfernt den Endboss, wenn seine Lebenspunkte auf 0 fallen
+        }
+    }
+
+    removeEndboss() {
+        console.log('Endboss besiegt und entfernt');
+        this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
+    }
+
+    checkCollisionWithBottle(bottle) {
+        if (this.isColliding(bottle)) {
+            this.takeHit();
+            bottle.remove();  // Flasche entfernen, wenn sie den Endboss trifft
         }
     }
 }

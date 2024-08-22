@@ -115,7 +115,11 @@ class World {
             this.activateThrowCooldown();
         }
         this.throwableObjects.forEach(bottle => {
-            bottle.checkCollisionWithChickens();  // Prüfen, ob die Flasche ein Huhn trifft
+            this.level.enemies.forEach(enemy => {
+                if (enemy instanceof Endboss) {
+                    enemy.checkCollisionWithBottle(bottle);  // Kollision mit dem Endboss überprüfen
+                }
+            });
         });
     }
 
