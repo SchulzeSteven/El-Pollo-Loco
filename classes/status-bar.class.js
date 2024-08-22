@@ -10,7 +10,8 @@ class StatusBar extends DrawableObjekt {
 
     constructor() {
         super();
-        this.loadImage('./assets/img/7_statusbars/3_icons/icon_health.png');
+        this.heartImg = new Image();
+        this.heartImg.src = './assets/img/7_statusbars/3_icons/icon_health.png'; // Herz-Symbol für den Charakter
 
         this.coinImg = new Image();
         this.coinImg.src = 'assets/img/7_statusbars/3_icons/icon_coin.png';
@@ -22,36 +23,31 @@ class StatusBar extends DrawableObjekt {
         this.y = 5;
         this.width = 50; 
         this.height = 50; 
-        this.lifePercentage = 100;
+        this.lifePercentage = 100;  // Character life percentage
         this.coinCount = 0;
         this.bottleCount = 0;
         this.shouldDrawEndboss = false;
         this.endbossWidth = 180;
         this.endbossHeight = 60;
-        this.endbossLife = 100;
+        this.endbossLife = 100;  // Endboss life percentage
     }
-
 
     setPercentage(lifePercentage) {
-        this.lifePercentage = lifePercentage;
+        this.lifePercentage = lifePercentage;  // This only affects character life
     }
-
 
     setCoinCount(coinCount) {
         this.coinCount = coinCount;
     }
 
-
     setBottleCount(bottleCount) {
         this.bottleCount = bottleCount;
     }
-
 
     setEndbossSize(width, height) {
         this.endbossWidth = width;
         this.endbossHeight = height;
     }
-
 
     updateEndbossLife(life) {
         this.endbossLife = life;
@@ -59,35 +55,37 @@ class StatusBar extends DrawableObjekt {
     }
 
     updateEndbossImage() {
-        const index = Math.floor(this.endbossLife / 20);  // Bestimmt das Bild basierend auf den Lebenspunkten
-        const imageIndex = Math.min(5, 5 - index);  // Verhindert, dass der Index unter 0 fällt
+        const index = Math.floor(this.endbossLife / 20);
+        const imageIndex = Math.min(5, index); // Select the correct image based on endboss life
         this.loadImage(this.IMAGES_ENDBOSS[imageIndex]);
     }
 
-
     draw(ctx) {
-        this.drawLife(ctx);
+        this.drawCharacterLife(ctx);  // Draw the character life bar
         this.drawCoins(ctx);
         this.drawBottles(ctx);
         if (this.shouldDrawEndboss) {
-            this.drawEndboss(ctx);
+            this.drawEndboss(ctx);  // Draw the endboss life bar separately
         }
     }
 
+    drawCharacterLife(ctx) {
+        const textX = this.x + this.width + 10;
+        const coinTextX = this.x + this.width + 0;
+        
+        ctx.drawImage(this.heartImg, this.x, this.y, this.width, this.height);
+        this.drawText(ctx, this.lifePercentage, coinTextX, this.y + this.height / 2 + 17);
+    }
+
     drawEndboss(ctx) {
-        const endbossImg = this.imageCache[this.IMAGES_ENDBOSS[5]];  // Wähle das letzte Bild aus der Liste
         const canvasWidth = ctx.canvas.width;
-        ctx.drawImage(endbossImg, canvasWidth - this.endbossWidth - 120, this.y, this.endbossWidth, this.endbossHeight);
+        ctx.drawImage(this.img, canvasWidth - this.endbossWidth - 120, this.y, this.endbossWidth, this.endbossHeight);  // Draw endboss life
     }
 
     enableEndbossDisplay() {
         this.shouldDrawEndboss = true;
-        this.loadImages(this.IMAGES_ENDBOSS);  // Lade die Bilder, wenn sie noch nicht geladen sind
-    }
-
-    drawLife(ctx) {
-        super.draw(ctx);
-        this.drawText(ctx, this.lifePercentage, this.x + this.width, this.y + this.height / 2 + 17);
+        this.loadImages(this.IMAGES_ENDBOSS);
+        this.loadImage(this.IMAGES_ENDBOSS[5]); // Set the default image to blue100.png
     }
 
     drawCoins(ctx) {
@@ -100,7 +98,6 @@ class StatusBar extends DrawableObjekt {
         this.drawText(ctx, this.bottleCount, this.x + this.width, this.y + this.height * 2.5 + 35);
     }
 
-
     drawText(ctx, text, x, y) {
         ctx.font = '40px zabars';  
         ctx.fillStyle = 'black';
@@ -108,7 +105,6 @@ class StatusBar extends DrawableObjekt {
         ctx.fillText(`${text}`, x, y);
         this.resetTextShadow(ctx);
     }
-
 
     setTextShadow(ctx, color, offsetX, offsetY, blur = 0) {
         ctx.shadowColor = color;

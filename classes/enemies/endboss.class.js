@@ -48,6 +48,7 @@ class Endboss extends MoveableObject {
     isAlerted = false;
     isAttacking = false;
     isWalking = false;
+    hasStartedMoving = false;
 
     constructor() {
         super().loadImage('./assets/img/4_enemie_boss_chicken/2_alert/G5.png');
@@ -78,6 +79,7 @@ class Endboss extends MoveableObject {
         this.isAlerted = true;
         setTimeout(() => {
             this.isWalking = true;
+            this.hasStartedMoving = true; // Endboss beginnt sich zu bewegen
             setInterval(() => {
                 this.moveLeft();
             }, 1000 / 60);
@@ -94,8 +96,14 @@ class Endboss extends MoveableObject {
     }
 
     takeHit() {
+        if (!this.hasStartedMoving) {
+            return; // Endboss kann erst Schaden nehmen, wenn er sich bewegt
+        }
+        
         this.life -= 20;  // Reduziert die Lebenspunkte um 20 pro Treffer
         console.log(`Endboss getroffen, verbleibende Lebenspunkte: ${this.life}`);
+
+        this.world.statusBar.updateEndbossLife(this.life);
 
         if (this.life <= 0) {
             this.removeEndboss();  // Entfernt den Endboss, wenn seine Lebenspunkte auf 0 fallen
