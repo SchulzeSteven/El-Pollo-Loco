@@ -28,10 +28,11 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.audioManager = audioManager;
+        this.audioManager.setWorld(this);
         this.muteIconOn.src = './assets/img/icons/volume-on.png';
         this.muteIconOff.src = './assets/img/icons/volume-off.png';
         this.character = new Character(audioManager);
-        this.throw_sound = this.audioManager.sounds.throwing;  // Verwendet den AudioManager
+        this.throw_sound = this.audioManager.sounds.throwing;
         this.initializeWorld();
         this.setupCanvasClickListener();
     }
@@ -105,7 +106,7 @@ class World {
         if (this.keyboard.D && this.statusBar.bottleCount > 0 && !this.throwCooldown) {
             let direction = this.character.otherDirection ? 'left' : 'right';
             let offsetX = direction === 'right' ? 60 : -30;
-
+    
             let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
@@ -113,6 +114,9 @@ class World {
             this.audioManager.play('throwing');
             this.activateThrowCooldown();
         }
+        this.throwableObjects.forEach(bottle => {
+            bottle.checkCollisionWithChickens();  // Prüfen, ob die Flasche ein Huhn trifft
+        });
     }
 
     activateThrowCooldown() {
@@ -145,11 +149,11 @@ class World {
             let rect = this.canvas.getBoundingClientRect();
             let mouseX = event.clientX - rect.left;
             let mouseY = event.clientY - rect.top;
-
+    
             // Überprüfen, ob der Klick innerhalb des Mute-Buttons war
             if (mouseX >= this.muteButton.x && mouseX <= this.muteButton.x + this.muteButton.width &&
                 mouseY >= this.muteButton.y && mouseY <= this.muteButton.y + this.muteButton.height) {
-                this.toggleMute();
+                this.audioManager.toggleMute();  // Schalte den Mute-Status um und aktualisiere das Icon
             }
         });
     }
@@ -161,7 +165,7 @@ class World {
     }
 
     drawMuteButton() {
-        let icon = this.isMuted ? this.muteIconOff : this.muteIconOn;
+        let icon = this.audioManager.isMuted ? this.muteIconOff : this.muteIconOn;
         this.ctx.drawImage(icon, this.muteButton.x, this.muteButton.y, this.muteButton.width, this.muteButton.height);
     }
 
@@ -172,19 +176,18 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.clouds);
-
+    
         this.ctx.translate(-this.camera_x, 0);
-
-        // ----------- Space for fixed objects -----------//
+    
         this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
-
+    
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
-
-        this.drawMuteButton();
+    
+        this.drawMuteButton();  // Stelle sicher, dass das Mute-Icon zuletzt gezeichnet wird
         requestAnimationFrame(() => {
             this.draw();
         });

@@ -28,6 +28,7 @@ class StatusBar extends DrawableObjekt {
         this.shouldDrawEndboss = false;
         this.endbossWidth = 180;
         this.endbossHeight = 60;
+        this.endbossLife = 100;
     }
 
 
@@ -49,6 +50,18 @@ class StatusBar extends DrawableObjekt {
     setEndbossSize(width, height) {
         this.endbossWidth = width;
         this.endbossHeight = height;
+    }
+
+
+    updateEndbossLife(life) {
+        this.endbossLife = life;
+        this.updateEndbossImage();
+    }
+
+    updateEndbossImage() {
+        const index = Math.floor(this.endbossLife / 20);  // Bestimmt das Bild basierend auf den Lebenspunkten
+        const imageIndex = Math.min(5, 5 - index);  // Verhindert, dass der Index unter 0 fällt
+        this.loadImage(this.IMAGES_ENDBOSS[imageIndex]);
     }
 
 

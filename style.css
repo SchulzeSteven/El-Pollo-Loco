@@ -11,12 +11,28 @@ body {
     margin: 0;
     font-family: 'zabars', Arial, Helvetica, sans-serif;
     background-image: url('./assets/img/5_background/bg.png');
+    background-repeat: no-repeat; /* Verhindert das Wiederholen des Hintergrundbildes */
+    background-size: cover; /* Sorgt dafür, dass das Hintergrundbild den gesamten sichtbaren Bereich abdeckt */
+    background-attachment: fixed; /* Fixiert das Hintergrundbild, damit es nicht scrollt */
+    background-position: center; /* Zentriert das Hintergrundbild */
 }
 
 h1 {
     font-size: 56px;
     text-decoration: underline;
     margin: 0;
+}
+
+h2 {
+    margin: 10px;
+    font-weight: unset;
+}
+
+p {
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    font-weight: unset;
 }
 
 canvas {
@@ -27,9 +43,16 @@ canvas {
     border-radius: 8px;
 }
 
+.controls {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .main {
     display: flex;
     height: 100vh;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .content {

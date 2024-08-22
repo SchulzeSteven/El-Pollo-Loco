@@ -33,10 +33,19 @@ class Chicken_Normal extends MoveableObject {
     }
 
     takeHit() {
-        this.hitsToKill--;  // Trefferanzahl um 1 reduzieren
-        console.log(`Chicken_Normal getroffen, verbleibende Treffer: ${this.hitsToKill}`);
-        if (this.hitsToKill <= 0) {
-            this.removeChicken(); // Entfernt das Huhn nach zwei Treffern
+        if (this.hitsToKill > 0) {
+            this.hitsToKill--;  // Trefferanzahl um 1 reduzieren
+            console.log(`Chicken_Normal getroffen, verbleibende Treffer: ${this.hitsToKill}`);
+            if (this.hitsToKill <= 0) {
+                this.removeChicken(); // Entfernt das Huhn nach den benötigten Treffern
+            }
+        }
+    }
+
+    checkCollisionWithBottle(bottle) {
+        if (this.isColliding(bottle)) {
+            this.takeHit();
+            bottle.remove();  // Flasche entfernen, wenn sie das Huhn trifft
         }
     }
 

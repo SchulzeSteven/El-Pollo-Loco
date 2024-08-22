@@ -8,11 +8,17 @@ class AudioManager {
             throwing: new Audio('./audio/throw.mp3')
         };
 
-        // Set specific volume for throwing sound
         this.sounds.throwing.volume = 0.2;
-
-        // Set global volume for other sounds
         this.setGlobalVolume(1);
+
+        this.isMuted = false;  
+        this.world = null;  // Referenz auf die World-Instanz
+
+        this.setupMuteToggle();  // Mute-Toggle-Listener einrichten
+    }
+
+    setWorld(world) {
+        this.world = world;  // Welt-Instanz setzen
     }
 
     play(soundName) {
@@ -38,19 +44,37 @@ class AudioManager {
 
     muteAll() {
         this.setGlobalVolume(0);
-        this.sounds.throwing.volume = 0;  // Ensure throwing sound is muted as well
+        this.sounds.throwing.volume = 0;
     }
 
     unmuteAll() {
         this.setGlobalVolume(1);
-        this.sounds.throwing.volume = 0.2;  // Reapply specific volume for throwing sound
+        this.sounds.throwing.volume = 0.2;
     }
 
     setGlobalVolume(volume) {
         for (let sound in this.sounds) {
-            if (sound !== 'throwing') {  // Keep specific volume for "throwing"
+            if (sound !== 'throwing') {
                 this.sounds[sound].volume = volume;
             }
         }
     }
+
+    setupMuteToggle() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'm' || event.key === 'M') {
+                this.toggleMute();
+            }
+        });
+    }
+
+    toggleMute() {
+    this.isMuted = !this.isMuted;
+    this.isMuted ? this.muteAll() : this.unmuteAll();
+    
+    if (this.world) {
+        this.world.clearCanvas();  // Canvas leeren
+        this.world.draw();  // Die Welt neu zeichnen
+    }
+}
 }

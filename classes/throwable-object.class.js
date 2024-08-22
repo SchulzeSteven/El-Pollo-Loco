@@ -37,14 +37,26 @@ class ThrowableObject extends MoveableObject {
                 this.playAnimation(this.IMAGES_THROWING);
             }
         }, 100);
-
+    
         this.moveInterval = setInterval(() => {
             if (this.y >= 350 && !this.isOnGround) {
                 this.onGround();
             } else {
                 this.x += this.direction === 'right' ? 12 : -12;
+                this.checkCollisionWithChickens();  // Hier die Kollision mit den Hühnern prüfen
             }
         }, 25);
+    }
+    
+    checkCollisionWithChickens() {
+        for (let enemy of this.world.level.enemies) {
+            if (enemy instanceof Chicken_Normal && enemy.isColliding(this)) {
+                enemy.takeHit();
+                this.remove();  // Flasche sofort entfernen nach dem Treffer
+                clearInterval(this.moveInterval);  // Bewegung stoppen, um weitere Kollisionen zu verhindern
+                break;  // Schleife beenden nach dem Treffer
+            }
+        }
     }
 
     onGround() {
