@@ -47,6 +47,7 @@ class Endboss extends MoveableObject {
 
     isAlerted = false;
     isAttacking = false;
+    isHurt = false;
     isWalking = false;
     hasStartedMoving = false;
 
@@ -55,6 +56,7 @@ class Endboss extends MoveableObject {
         this.loadImages(this.IMAGES_ALERT);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_HURT);
         this.x = 3050;
         this.y = 55;
         this.hitsToKill = 5;
@@ -96,17 +98,20 @@ class Endboss extends MoveableObject {
     }
 
     takeHit() {
-        if (!this.hasStartedMoving) {
-            return; // Endboss kann erst Schaden nehmen, wenn er sich bewegt
-        }
-        
+        if (this.isHurt || !this.hasStartedMoving) 
+            return; // Treffer ignorieren, wenn der Endboss bereits in Hurt-Animation ist oder noch nicht läuft
         this.life -= 20;  // Reduziert die Lebenspunkte um 20 pro Treffer
-        console.log(`Endboss getroffen, verbleibende Lebenspunkte: ${this.life}`);
-
+        this.isHurt = true;  // Setze Hurt-Zustand
+        this.playAnimation(this.IMAGES_HURT, 60);  // Spiele die Hurt-Animation langsamer ab (250ms pro Frame)
+    
+        setTimeout(() => {
+            this.isHurt = false;  // Setze Hurt-Zustand zurück, um erneut getroffen werden zu können
+        }, this.IMAGES_HURT.length * 250);  // Länge der Hurt-Animation: 3 Bilder * 250ms
+    
         this.world.statusBar.updateEndbossLife(this.life);
-
+    
         if (this.life <= 0) {
-            this.removeEndboss();  // Entfernt den Endboss, wenn seine Lebenspunkte auf 0 fallen
+            this.removeEndboss();
         }
     }
 
@@ -118,7 +123,7 @@ class Endboss extends MoveableObject {
     checkCollisionWithBottle(bottle) {
         if (this.isColliding(bottle)) {
             this.takeHit();
-            bottle.remove();  // Flasche entfernen, wenn sie den Endboss trifft
+            bottle.remove();
         }
     }
 }

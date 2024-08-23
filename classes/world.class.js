@@ -104,6 +104,8 @@ class World {
 
     checkThrowObjects() {
         if (this.keyboard.D && this.statusBar.bottleCount > 0 && !this.throwCooldown) {
+            this.character.resetIdleTimers(); // Stoppt die Idle-Animationen, wenn eine Flasche geworfen wird
+    
             let direction = this.character.otherDirection ? 'left' : 'right';
             let offsetX = direction === 'right' ? 60 : -30;
     
@@ -114,6 +116,7 @@ class World {
             this.audioManager.play('throwing');
             this.activateThrowCooldown();
         }
+    
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
                 if (enemy instanceof Endboss) {
