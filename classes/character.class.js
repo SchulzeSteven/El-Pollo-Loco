@@ -74,6 +74,7 @@ class Character extends MoveableObject {
     isIdle = false;
     isLongIdle = false;
     animationStarted = false;
+    deadAnimationCompleted = false;
     lastBounceTime = 0;
     bounceCooldown = 250;
 
@@ -95,7 +96,7 @@ class Character extends MoveableObject {
 
     checkCollisionsWithChickens(chickens) {
         // Keine Kollisionsprüfung, wenn der Charakter tot ist
-        if (this.isDead()) {
+        if (this.isDead() || this.world.endbossDefeated) {
             return;
         }
 
@@ -124,10 +125,11 @@ class Character extends MoveableObject {
 
     animate() {
         setInterval(() => {
-            if (this.isDead()) {
+            if (this.isDead() || this.world.gameStopped) {
                 this.audioManager.pause('walking');
                 this.audioManager.pause('jumping');
                 this.audioManager.pause('snoring');
+                this.audioManager.pause('hurting');
                 return;
             }
 
@@ -190,7 +192,7 @@ class Character extends MoveableObject {
                 return;
             }
 
-            if (!this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
+            if (!this.world.gameStopped && !this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
                 if (this.isLongIdle) {
                     this.playAnimation(this.IMAGES_IDLE_LONG);
                     this.audioManager.play('snoring');
@@ -204,7 +206,8 @@ class Character extends MoveableObject {
     }
 
     playDeadAnimationOnce() {
-        this.animationStarted = true;
+        if (this.animationStarted) return;  // Verhindert mehrmaliges Aufrufen
+        this.animationStarted = true;       // Setzt das Flag auf true
         let currentImageIndex = 0;
         const interval = setInterval(() => {
             if (currentImageIndex < this.IMAGES_DEAD.length) {
@@ -212,8 +215,18 @@ class Character extends MoveableObject {
                 currentImageIndex++;
             } else {
                 clearInterval(interval);
+                this.deadAnimationCompleted = true;  // Setzt das Flag, wenn die Animation beendet ist
             }
-        }, 150);
+        }, 150);  // Geschwindigkeit der Animation in ms
+    }
+
+    isDeadAnimationCompleted() {
+        return this.deadAnimationCompleted;
+    }
+
+    // Bestehende isDead-Methode, um zu prüfen, ob der Charakter tot ist
+    isDead() {
+        return this.life <= 0;
     }
 
     setIdleTimers() {

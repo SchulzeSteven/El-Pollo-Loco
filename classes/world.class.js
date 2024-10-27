@@ -12,6 +12,8 @@ class World {
     endbossMovementStarted = false;
     throwCooldown = false;
     isMuted = false;
+    endbossDefeated = false;
+    gameStopped = false;
 
     muteButton = {
         x: 660,  // Rechts oben
@@ -46,6 +48,8 @@ class World {
     }
 
     setWorld() {
+        audioManager.play('background');
+        this.audioManager.sounds.background.volume = 0.2;
         this.character.world = this;
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
@@ -177,27 +181,41 @@ class World {
     }
 
     draw() {
+        // Wenn der Charakter tot ist oder der Endboss besiegt wurde, das Spiel stoppen
+        if (this.character.isDead()) {
+            this.character.playDeadAnimationOnce();  // Startet die Todesanimation einmalig
+                if (this.character.isDeadAnimationCompleted()) {
+                    this.audioManager.playGameOverMusic();  // Spielt Gameover-Musik ab, wenn die Animation vorbei ist
+                    this.stopGame();                        // Stoppt das Spiel
+                    return;                                 // Beendet die Zeichenschleife
+                }
+        }
+        
         this.clearCanvas();
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.clouds);
-    
         this.ctx.translate(-this.camera_x, 0);
-    
         this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
-    
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
-    
-        this.drawMuteButton();  // Stelle sicher, dass das Mute-Icon zuletzt gezeichnet wird
-        requestAnimationFrame(() => {
-            this.draw();
-        });
+        this.drawMuteButton();
+        this.animationFrameId = requestAnimationFrame(() => this.draw());
+    }
+
+    stopGame() {
+        this.gameStopped = true;
+        cancelAnimationFrame(this.animationFrameId);
+        if (this.collisionInterval) {
+            clearInterval(this.collisionInterval);
+            this.collisionInterval = null;
+        }
+        console.log('Spiel gestoppt');
     }
 
     addObjectsToMap(objects) {

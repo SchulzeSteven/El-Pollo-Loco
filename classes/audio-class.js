@@ -5,9 +5,13 @@ class AudioManager {
             jumping: new Audio('./audio/jump.mp3'),
             snoring: new Audio('./audio/snore.mp3'),
             hurting: new Audio('./audio/hurt.mp3'),
-            throwing: new Audio('./audio/throw.mp3')
+            throwing: new Audio('./audio/throw.mp3'),
+            background: new Audio('./audio/backgroundMusic.mp3'),
+            gameover: new Audio('./audio/gameover.mp3'),
+            win: new Audio('./audio/win.mp3')
         };
 
+        this.sounds.background.volume = 0.2;
         this.sounds.throwing.volume = 0.2;
         this.setGlobalVolume(1);
 
@@ -35,6 +39,17 @@ class AudioManager {
         }
     }
 
+    playGameOverMusic() {
+        this.pause('background');  // Hintergrundmusik anhalten
+        this.play('gameover');     // Gameover-Sound abspielen
+    }
+
+    playWinMusic() {
+        this.pause('background');  // Hintergrundmusik anhalten
+        this.setVolume('win', 0.2);
+        this.play('win');          // Win-Sound abspielen
+    }
+
     setVolume(soundName, volume) {
         const sound = this.sounds[soundName];
         if (sound) {
@@ -49,6 +64,7 @@ class AudioManager {
 
     unmuteAll() {
         this.setGlobalVolume(1);
+        this.sounds.background.volume = 0.2;
         this.sounds.throwing.volume = 0.2;
     }
 

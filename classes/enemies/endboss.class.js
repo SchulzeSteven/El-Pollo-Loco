@@ -148,11 +148,11 @@ class Endboss extends MoveableObject {
                 currentImageIndex++;
             } else {
                 clearInterval(interval);
-                this.removeEndboss();  // Entfernt den Endboss, nachdem die Animation abgeschlossen ist
+                this.world.endbossDefeated = true;   // Endboss-Todstatus setzen
+                this.removeEndboss();
             }
-        }, 200);  // Verlangsamt die Animation auf 200ms pro Frame
+        }, 200);
     }
-
     stopWalking() {
         this.isWalking = false;  // Setzt den Walking-Zustand auf false
     }
@@ -166,6 +166,8 @@ class Endboss extends MoveableObject {
     removeEndboss() {
         console.log('Endboss besiegt und entfernt');
         this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
+        this.world.stopGame();
+        this.world.audioManager.playWinMusic();
     }
 
     checkCollisionWithBottle(bottle) {
