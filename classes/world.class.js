@@ -14,6 +14,7 @@ class World {
     isMuted = false;
     endbossDefeated = false;
     gameStopped = false;
+    endScreen = new EndScreen();
 
     muteButton = {
         x: 660,  // Rechts oben
@@ -137,6 +138,16 @@ class World {
         }, 250);
     }
 
+    checkGameEnd() {
+        if (this.character.isDead()) {
+            this.stopGame();
+            this.endScreen.drawEndScreen(this.ctx, false); // Game Over anzeigen
+        } else if (this.endbossDefeated) {
+            this.stopGame();
+            this.endScreen.drawEndScreen(this.ctx, true); // Sieg anzeigen
+        }
+    }
+
     checkEndbossCollision() {
         const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
         if (endboss) {
@@ -157,6 +168,8 @@ class World {
 
     setupCanvasClickListener() {
         this.canvas.addEventListener('click', (event) => {
+            if (this.gameStopped) return; // Keine Aktion, wenn das Spiel gestoppt ist
+    
             let rect = this.canvas.getBoundingClientRect();
             let mouseX = event.clientX - rect.left;
             let mouseY = event.clientY - rect.top;
@@ -164,7 +177,7 @@ class World {
             // Überprüfen, ob der Klick innerhalb des Mute-Buttons war
             if (mouseX >= this.muteButton.x && mouseX <= this.muteButton.x + this.muteButton.width &&
                 mouseY >= this.muteButton.y && mouseY <= this.muteButton.y + this.muteButton.height) {
-                this.audioManager.toggleMute();  // Schalte den Mute-Status um und aktualisiere das Icon
+                this.audioManager.toggleMute(); // Schalte den Mute-Status um und aktualisiere das Icon
             }
         });
     }
@@ -181,16 +194,9 @@ class World {
     }
 
     draw() {
-        // Wenn der Charakter tot ist oder der Endboss besiegt wurde, das Spiel stoppen
-        if (this.character.isDead()) {
-            this.character.playDeadAnimationOnce();  // Startet die Todesanimation einmalig
-                if (this.character.isDeadAnimationCompleted()) {
-                    this.audioManager.playGameOverMusic();  // Spielt Gameover-Musik ab, wenn die Animation vorbei ist
-                    this.stopGame();                        // Stoppt das Spiel
-                    return;                                 // Beendet die Zeichenschleife
-                }
-        }
-        
+        if (this.handleCharacterDeath()) return;
+
+        this.checkGameEnd();
         this.clearCanvas();
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -208,6 +214,18 @@ class World {
         this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
 
+    handleCharacterDeath() {
+        if (this.character.isDead()) {
+            this.character.playDeadAnimationOnce();  // Startet die Todesanimation einmalig
+            if (this.character.isDeadAnimationCompleted()) {
+                this.audioManager.playGameOverMusic();  // Spielt Gameover-Musik ab, wenn die Animation vorbei ist
+                this.stopGame();                        // Stoppt das Spiel
+                return true;                            // Gibt an, dass das Spiel beendet wurde
+            }
+        }
+        return false; // Gibt an, dass das Spiel nicht beendet wurde
+    }
+
     stopGame() {
         this.gameStopped = true;
         cancelAnimationFrame(this.animationFrameId);
@@ -215,7 +233,6 @@ class World {
             clearInterval(this.collisionInterval);
             this.collisionInterval = null;
         }
-        console.log('Spiel gestoppt');
     }
 
     addObjectsToMap(objects) {

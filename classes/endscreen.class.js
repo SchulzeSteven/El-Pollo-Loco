@@ -1,13 +1,18 @@
 class EndScreen extends DrawableObjekt {
     IMAGES_GAMEOVER = [
-        "./assets/img/9_intro_outro_screens/game_over/game over.png"
+        "./assets/img/9_intro_outro_screens/game_over/game-over.png"
     ];
     
     IMAGES_WIN = [
-        "./assets/img/9_intro_outro_screens/win/win_1.png"
+        "./assets/img/9_intro_outro_screens/win/win_2.png"
     ];
 
-    win_sound = new Sounds("./assets/audio/win.mp3");
-    gameover_sound = new Sounds("./assets/audio/gameover.mp3");
-
+    drawEndScreen(ctx, hasWon) {
+        const imagePath = hasWon ? this.IMAGES_WIN[0] : this.IMAGES_GAMEOVER[0];
+        const img = new Image();
+        img.src = imagePath;
+        img.onload = () => {
+            ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
+        };
+    }
 }
