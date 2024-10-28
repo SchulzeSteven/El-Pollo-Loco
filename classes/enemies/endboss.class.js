@@ -148,11 +148,16 @@ class Endboss extends MoveableObject {
                 currentImageIndex++;
             } else {
                 clearInterval(interval);
-                this.world.endbossDefeated = true;   // Endboss-Todstatus setzen
-                this.removeEndboss();
+                this.world.endbossDefeated = true;  // Endboss-Todstatus setzen
+                
+                // Verzögerung hinzufügen, bevor der Endboss entfernt wird
+                setTimeout(() => {
+                    this.removeEndboss();
+                }, 120);
             }
-        }, 200);
+        }, 200); // Animationstempo auf 200 ms pro Bild
     }
+
     stopWalking() {
         this.isWalking = false;  // Setzt den Walking-Zustand auf false
     }
