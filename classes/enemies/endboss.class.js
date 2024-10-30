@@ -62,6 +62,7 @@ class Endboss extends MoveableObject {
         this.y = 55;
         this.hitsToKill = 5;
         this.life = 100;
+        this.intervals = [];
         this.animate();
         this.setRedFrameOffset(50, 10, 10, 25);
     }
@@ -80,13 +81,16 @@ class Endboss extends MoveableObject {
 
     startMovingLeft() {
         this.isAlerted = true;
-        setTimeout(() => {
+        this.intervals.push(setTimeout(() => {
             this.isWalking = true;
-            this.hasStartedMoving = true; // Endboss beginnt sich zu bewegen
-            setInterval(() => {
-                this.moveLeft();
-            }, 1000 / 60);
-        }, 1000);  // bevor der Endboss anfängt zu laufen
+            this.hasStartedMoving = true;
+            this.intervals.push(setInterval(() => this.moveLeft(), 1000 / 60));
+        }, 1000));
+    }
+
+    clearIntervals() {
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
     }
 
     checkCollisionWithCharacter(character) {

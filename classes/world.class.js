@@ -229,11 +229,55 @@ class World {
     stopGame() {
         this.gameStopped = true;
         cancelAnimationFrame(this.animationFrameId);
+    
         if (this.collisionInterval) {
             clearInterval(this.collisionInterval);
             this.collisionInterval = null;
         }
+    
+        if (this.endbossMovementInterval) {
+            clearInterval(this.endbossMovementInterval);
+            this.endbossMovementInterval = null;
+        }
+    
+        this.level.enemies.forEach(enemy => {
+            if (enemy.clearIntervals) {
+                enemy.clearIntervals(); // Ruft clearIntervals auf, um alle Gegner-Intervalle zu stoppen
+            }
+        });
+    
+        this.throwableObjects = [];
     }
+    
+
+    resetWorld() {
+        // Setzt die Welt zurück, indem eine neue Instanz des Levels geladen wird
+        this.level = new Level(
+            level1.enemies.map(enemy => new enemy.constructor()), // Erstellt neue Instanzen aller Gegner
+            level1.coins.map(() => new Coin()),                   // Erstellt neue Münzen
+            level1.bottles.map(() => {
+                let bottle = new Bottle();
+                bottle.setRandomXPosition();  // Platziert die Flasche zufällig
+                return bottle;
+            }),
+            level1.clouds.map(() => new Cloud()),                 // Erstellt neue Wolken
+            level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x)) // Erstellt neue Hintergrundobjekte
+        );
+    
+        this.throwableObjects = [];           // Leert alle geworfenen Objekte
+        this.endbossMovementStarted = false;  // Setzt Endboss-Status zurück
+        this.throwCooldown = false;           // Setzt Wurfabklingzeit zurück
+        this.endbossDefeated = false;         // Setzt Endboss-Status zurück
+        this.gameStopped = false;             // Setzt den Spielzustand zurück
+        this.character = new Character(this.audioManager); // Erstellt einen neuen Charakter
+    
+        this.initializeWorld();  // Initialisiert die Welt neu
+        
+        // Bewegungsintervalle und Kollisionsprüfungen neu starten
+        this.checkCollisions();
+        this.checkEndbossMovement();
+    }
+    
 
     addObjectsToMap(objects) {
         objects.forEach(object => {

@@ -42,18 +42,11 @@
             <div id="start" class="startScreen">
                 <img class="startScreen-img" src="./assets/img/9_intro_outro_screens/start/startscreen_1.png" alt="">
                 <button onclick="startGame()" class="start-button">Start</button>
-                <!-- <button id="btn-mute" class="mute-btn" onclick="muteGame(); this.blur();">
-                    <img id="mute-icon" src="./assets/img/icons/volume-on.png" alt="Mute/Unmute">
-                </button> -->
             </div>
             <div class="btn-container">
-                <button onclick="homeScreen()" id="home" class="btns restart">
-                  Home
-                </button>
-                <button onclick="start()" id="reset" class="btns restart">
-                  Restart
-                </button>
-              </div>
+                <button onclick="home()" id="home" class="btns restart">Home</button>
+                <button onclick="restartGame()" id="reset" class="btns restart">Restart</button>
+            </div>
             <canvas id="canvas" width="720" height="480" style="display: none;"></canvas>
         </div>
         <div class="controls">

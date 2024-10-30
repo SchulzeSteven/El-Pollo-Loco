@@ -17,19 +17,20 @@ class Chicken_Small extends MoveableObject {
         this.y = 375;
         this.x = 600 + Math.random() * 2100;
         this.speed = 0.15 + Math.random() * 0.35;
+        this.intervals = [];
         this.animate();
         this.setRedFrameOffset(1, 1, 1, 1);
     }
 
 
     animate() {
-        setInterval(() => {
-            this.checkMovement();
-        }, 1000 / 60);
+        this.intervals.push(setInterval(() => this.checkMovement(), 1000 / 60));
+        this.intervals.push(setInterval(() => this.playAnimation(this.IMAGES_WALKING), 200));
+    }
 
-        setInterval(() => {
-            this.playAnimation(this.IMAGES_WALKING);
-        }, 200);
+    clearIntervals() {
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
     }
 
     takeHit() {
