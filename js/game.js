@@ -17,6 +17,8 @@ function startGame() {
 }
 
 function restartGame() {
+    Bottle.lastX = 0;  // Rücksetzen der statischen Eigenschaft für Flaschen
+
     if (world) {
         world.stopGame(); // Stoppt die laufende Welt und alle Intervalle
     }
@@ -24,11 +26,7 @@ function restartGame() {
 
     // Erstelle eine neue Instanz der Welt und des Levels
     world = new World(canvas, keyboard, audioManager);
-    
-    // Setze das Level mit den ursprünglichen Objekten neu
-    world.level.bottles = level1.bottles.map(() => new Bottle());
-    world.level.coins = level1.coins.map(() => new Coin());
-    
+
     // Initialisiert die Welt und alle Bewegungs- und Kollisionsintervalle neu
     world.resetWorld();
 
@@ -36,6 +34,9 @@ function restartGame() {
 
     console.log("Spiel wurde zurückgesetzt, Objekte neu initialisiert.");
 }
+
+
+
 
 
 function initEventListeners() {

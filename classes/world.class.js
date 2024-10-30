@@ -251,7 +251,8 @@ class World {
     
 
     resetWorld() {
-        // Setzt die Welt zurück, indem eine neue Instanz des Levels geladen wird
+        Bottle.lastX = 0;  // Reset von lastX für die Zufallsplatzierung der Flaschen
+    
         this.level = new Level(
             level1.enemies.map(enemy => new enemy.constructor()), // Erstellt neue Instanzen aller Gegner
             level1.coins.map(() => new Coin()),                   // Erstellt neue Münzen
@@ -277,6 +278,9 @@ class World {
         this.checkCollisions();
         this.checkEndbossMovement();
     }
+    
+    
+    
     
 
     addObjectsToMap(objects) {
