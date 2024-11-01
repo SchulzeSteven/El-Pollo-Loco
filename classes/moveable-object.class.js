@@ -6,16 +6,18 @@ class MoveableObject extends DrawableObjekt {
         acceleration = 3;
         life = 100;
         lastHit = 0;
+        intervals = [];
 
 
         applyGravity() {
-            setInterval(() => {
-                if(this.isAboveGround() || this.speedY > 0) {
+            const gravityInterval = setInterval(() => {
+                if (this.isAboveGround() || this.speedY > 0) {
                     this.y -= this.speedY;
                     this.speedY -= this.acceleration;
                     this.checkIfLanded();
                 }
             }, 1000 / 25);
+            this.intervals.push(gravityInterval);  // Speichert das Intervall
         }
 
 
@@ -117,12 +119,18 @@ class MoveableObject extends DrawableObjekt {
 
         moveLeft() {
             if (this instanceof Chicken_Normal || this instanceof Chicken_Small || this instanceof Cloud) {
-                setInterval(() => {
+                const moveInterval = setInterval(() => {
                     this.x -= this.speed;
                 }, 1000 / 60);
+                this.intervals.push(moveInterval);  // Speichert das Intervall
             } else {
                 this.x -= this.speed;
             }
+        }
+
+        clearIntervals() {
+            this.intervals.forEach(clearInterval);  // Beendet alle gespeicherten Intervalle
+            this.intervals = [];  // Setzt das Intervall-Array zurück
         }
 
 

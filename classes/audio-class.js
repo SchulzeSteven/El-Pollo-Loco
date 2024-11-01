@@ -39,6 +39,14 @@ class AudioManager {
         }
     }
 
+    stopAndResetSounds() {
+        for (let soundName in this.sounds) {
+            const sound = this.sounds[soundName];
+            sound.pause();              // Stoppt den Sound
+            sound.currentTime = 0;      // Setzt die Wiedergabeposition auf Anfang
+        }
+    }
+
     playGameOverMusic() {
         this.pause('background');  // Hintergrundmusik anhalten
         this.play('gameover');     // Gameover-Sound abspielen

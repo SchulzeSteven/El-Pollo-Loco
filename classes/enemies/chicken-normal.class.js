@@ -3,6 +3,7 @@ class Chicken_Normal extends MoveableObject {
     height = 75;
     width = 75;
     hitsToKill = 2;
+    intervals = [];
     IMAGES_WALKING = [
         './assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         './assets/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
@@ -17,7 +18,6 @@ class Chicken_Normal extends MoveableObject {
         this.y = 350;
         this.x = 700 + Math.random() * 2100;
         this.speed = 0.15 + Math.random() * 0.45;
-        this.intervals = [];
         this.animate();
         this.setRedFrameOffset(2, 2, 2, 2);
     }
@@ -30,9 +30,8 @@ class Chicken_Normal extends MoveableObject {
     }
 
     clearIntervals() {
-        // Löscht alle gespeicherten Intervalle
-        this.intervals.forEach(clearInterval);
-        this.intervals = [];
+        this.intervals.forEach(interval => clearInterval(interval));
+        this.intervals = [];  // Array zurücksetzen
     }
 
     takeHit() {
@@ -54,6 +53,7 @@ class Chicken_Normal extends MoveableObject {
 
     removeChicken() {
         console.log('Chicken_Normal entfernt');
+        this.clearIntervals();
         this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
     }
     checkMovement() {

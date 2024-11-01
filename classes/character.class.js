@@ -75,8 +75,10 @@ class Character extends MoveableObject {
     isLongIdle = false;
     animationStarted = false;
     deadAnimationCompleted = false;
+    isSnoring = false;
     lastBounceTime = 0;
     bounceCooldown = 250;
+    intervals = [];
 
     constructor(audioManager) {
         super().loadImage('./assets/img/2_character_pepe/2_walk/W-21.png');
@@ -124,7 +126,8 @@ class Character extends MoveableObject {
     }
 
     animate() {
-        setInterval(() => {
+        // Erstellen und Speichern aller Intervalle im Array
+        this.intervals.push(setInterval(() => {
             if (this.isDead() || this.world.gameStopped) {
                 this.audioManager.pause('walking');
                 this.audioManager.pause('jumping');
@@ -162,7 +165,7 @@ class Character extends MoveableObject {
             }
 
             this.world.camera_x = -this.x + 100;
-        }, 1000 / 60);
+        }, 1000 / 60));
 
         setInterval(() => {
             this.checkCollisionsWithChickens(this.world.level.enemies.filter(enemy => enemy instanceof Chicken_Normal || enemy instanceof Chicken_Small));
@@ -191,18 +194,35 @@ class Character extends MoveableObject {
                 this.audioManager.pause('snoring');
                 return;
             }
-
+    
+            // Leerlauf-Check: Schnarchgeräusch nur abspielen, wenn der Charakter lange im Leerlauf ist
             if (!this.world.gameStopped && !this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
                 if (this.isLongIdle) {
                     this.playAnimation(this.IMAGES_IDLE_LONG);
-                    this.audioManager.play('snoring');
+                    this.audioManager.play('snoring');  // Schnarchgeräusch starten
                 } else if (this.isIdle) {
                     this.playAnimation(this.IMAGES_IDLE);
                 } else {
                     this.loadImage('./assets/img/2_character_pepe/1_idle/idle/I-1.png');
+                    this.audioManager.pause('snoring');
                 }
+            } else {
+                // Schnarchgeräusch pausieren, wenn der Charakter sich bewegt oder springt
+                this.audioManager.pause('snoring');
             }
         }, 200);
+    }
+
+    clearIntervals() {
+        this.intervals.forEach(interval => clearInterval(interval)); // Löscht alle in `this.intervals` gespeicherten Intervalle
+        clearTimeout(this.idleTimeout);
+        clearTimeout(this.longIdleTimeout);
+    
+        this.intervals = [];
+        this.isIdle = false;
+        this.isLongIdle = false;
+        this.animationStarted = false;
+        this.deadAnimationCompleted = false;
     }
 
     playDeadAnimationOnce() {

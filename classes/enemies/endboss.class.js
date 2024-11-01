@@ -174,6 +174,7 @@ class Endboss extends MoveableObject {
 
     removeEndboss() {
         console.log('Endboss besiegt und entfernt');
+        this.clearIntervals();
         this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
         this.world.stopGame();
         this.world.audioManager.playWinMusic();

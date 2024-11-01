@@ -15,6 +15,7 @@ class World {
     endbossDefeated = false;
     gameStopped = false;
     endScreen = new EndScreen();
+    intervals = [];
 
     muteButton = {
         x: 660,  // Rechts oben
@@ -45,7 +46,6 @@ class World {
         this.setWorld();
         this.checkCollisions();
         this.checkEndbossMovement();
-        this.setupFrameToggle();
     }
 
     setWorld() {
@@ -70,6 +70,15 @@ class World {
             this.checkThrowObjects();
             this.checkEndbossCollision();
         }, 250);
+        
+        // Speichere das Intervall
+        this.intervals.push(collisionInterval);
+    }
+
+    clearIntervals() {
+        // Stoppt alle gespeicherten Intervalle
+        this.intervals.forEach(interval => clearInterval(interval));
+        this.intervals = [];  // Array zurücksetzen
     }
 
     checkEnemyCollisions() {
@@ -251,38 +260,43 @@ class World {
     
 
     resetWorld() {
-        Bottle.lastX = 0;  // Reset von lastX für die Zufallsplatzierung der Flaschen
+    this.clearIntervals();  // Stoppt alle laufenden Kollisions- und Bewegungsintervalle
     
-        this.level = new Level(
-            level1.enemies.map(enemy => new enemy.constructor()), // Erstellt neue Instanzen aller Gegner
-            level1.coins.map(() => new Coin()),                   // Erstellt neue Münzen
-            level1.bottles.map(() => {
-                let bottle = new Bottle();
-                bottle.setRandomXPosition();  // Platziert die Flasche zufällig
-                return bottle;
-            }),
-            level1.clouds.map(() => new Cloud()),                 // Erstellt neue Wolken
-            level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x)) // Erstellt neue Hintergrundobjekte
-        );
-    
-        this.throwableObjects = [];           // Leert alle geworfenen Objekte
-        this.endbossMovementStarted = false;  // Setzt Endboss-Status zurück
-        this.throwCooldown = false;           // Setzt Wurfabklingzeit zurück
-        this.endbossDefeated = false;         // Setzt Endboss-Status zurück
-        this.gameStopped = false;             // Setzt den Spielzustand zurück
-        this.character = new Character(this.audioManager); // Erstellt einen neuen Charakter
-    
-        this.initializeWorld();  // Initialisiert die Welt neu
-        
-        // Bewegungsintervalle und Kollisionsprüfungen neu starten
-        this.checkCollisions();
-        this.checkEndbossMovement();
-    }
-    
-    
-    
-    
+    Bottle.lastX = 0;        // Reset für die zufällige Positionierung der Flaschen
+    Bottle.minSpacing = 100; // Mindestabstand auf 100 Pixel setzen
 
+    // Welt und Objekte zurücksetzen
+    this.level = new Level(
+        level1.enemies.map(enemy => new enemy.constructor()),  // Erstellt neue Instanzen aller Gegner
+        level1.coins.map(() => new Coin()),                    // Erstellt neue Münzen
+        Array.from({ length: 12 }, () => {                     // Erstellt genau 12 Flaschen
+            let bottle = new Bottle();
+            bottle.setRandomXPosition();                       // Platziert die Flasche zufällig
+            return bottle;
+        }),
+        level1.clouds.map(() => new Cloud()),                  // Erstellt neue Wolken
+        level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x)) // Erstellt neue Hintergrundobjekte
+    );
+
+    this.throwableObjects = [];
+    this.endbossMovementStarted = false;
+    this.throwCooldown = false;
+    this.endbossDefeated = false;
+    this.gameStopped = false;
+
+    if (this.character) {
+        this.character.clearIntervals();  // Stoppt alle laufenden Timer der alten Charakter-Instanz
+    }
+
+    this.character = new Character(this.audioManager);  // Neue Charakter-Instanz
+    this.initializeWorld();  // Initialisiert die Welt neu
+    
+    // Bewegungsintervalle und Kollisionsprüfungen neu starten
+    this.checkCollisions();
+    this.checkEndbossMovement();
+}
+
+    
     addObjectsToMap(objects) {
         objects.forEach(object => {
             this.addToMap(object);
@@ -320,14 +334,14 @@ class World {
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-
-    setupFrameToggle() {
-        window.addEventListener('keydown', (event) => {
-            if (event.key === '#') {
-                this.showFrames = !this.showFrames;
-                console.log(`Frame drawing is now ${this.showFrames ? 'enabled' : 'disabled'}`);
-            }
-        });
-    }
 }
+
+window.addEventListener('keydown', (event) => {
+    if (event.key === '#') {
+        if (world) {
+            world.showFrames = !world.showFrames;
+            console.log(`Frame drawing is now ${world.showFrames ? 'enabled' : 'disabled'}`);
+        }
+    }
+});
 

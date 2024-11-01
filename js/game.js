@@ -17,26 +17,29 @@ function startGame() {
 }
 
 function restartGame() {
-    Bottle.lastX = 0;  // Rücksetzen der statischen Eigenschaft für Flaschen
-
     if (world) {
-        world.stopGame(); // Stoppt die laufende Welt und alle Intervalle
+        world.stopGame();                     // Stoppt alle Intervalle und Animationen
+        world.character.clearIntervals();      // Charakter-Intervalle zurücksetzen
+        world.level.enemies.forEach(enemy => { // Setzt Intervalle aller Gegner zurück
+            if (enemy.clearIntervals) {
+                enemy.clearIntervals();
+            }
+        });
+        world.audioManager.stopAndResetSounds();  // Sounds stoppen und zurücksetzen
+        world.character.resetIdleTimers();
+        world = null;  // Setzt die `world`-Instanz auf null, um alle Referenzen zu löschen
     }
+
+    // Canvas leeren
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
-    // Erstelle eine neue Instanz der Welt und des Levels
+    // Neue Welt-Instanz erstellen und initialisieren
     world = new World(canvas, keyboard, audioManager);
-
-    // Initialisiert die Welt und alle Bewegungs- und Kollisionsintervalle neu
     world.resetWorld();
 
-    initEventListeners(); // Setze alle Event Listener neu
-
-    console.log("Spiel wurde zurückgesetzt, Objekte neu initialisiert.");
+    initEventListeners();
+    console.log("Spiel wurde vollständig zurückgesetzt und neu gestartet.");
 }
-
-
-
 
 
 function initEventListeners() {
