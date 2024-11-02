@@ -150,11 +150,25 @@ class World {
     checkGameEnd() {
         if (this.character.isDead()) {
             this.stopGame();
-            this.endScreen.drawEndScreen(this.ctx, false); // Game Over anzeigen
+            this.endScreen.drawEndScreen(this.ctx, false); // Game Over-Bild anzeigen
         } else if (this.endbossDefeated) {
             this.stopGame();
-            this.endScreen.drawEndScreen(this.ctx, true); // Sieg anzeigen
+            this.endScreen.drawEndScreen(this.ctx, true); // Win-Bild anzeigen
         }
+    }
+    
+    showBtnContainer() {
+        const btnContainer = document.querySelector('.btn-container');
+        btnContainer.style.display = 'flex';
+        
+        // Buttons zuerst deaktivieren und ausgegraut anzeigen
+        const buttons = btnContainer.querySelectorAll('.btns');
+        buttons.forEach(button => button.classList.add('disabled'));
+    
+        // Nach 3 Sekunden aktivieren und normale Farbe anzeigen
+        setTimeout(() => {
+            buttons.forEach(button => button.classList.remove('disabled'));
+        }, 2000);
     }
 
     checkEndbossCollision() {

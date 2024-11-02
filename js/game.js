@@ -17,17 +17,21 @@ function startGame() {
 }
 
 function restartGame() {
+    // Blendet die Button-Gruppe aus
+    document.querySelector('.btn-container').style.display = 'none';
+
+    // Neustart des Spiels initialisieren
     if (world) {
-        world.stopGame();                     // Stoppt alle Intervalle und Animationen
-        world.character.clearIntervals();      // Charakter-Intervalle zurücksetzen
-        world.level.enemies.forEach(enemy => { // Setzt Intervalle aller Gegner zurück
+        world.stopGame();
+        world.character.clearIntervals();
+        world.level.enemies.forEach(enemy => {
             if (enemy.clearIntervals) {
                 enemy.clearIntervals();
             }
         });
-        world.audioManager.stopAndResetSounds();  // Sounds stoppen und zurücksetzen
+        world.audioManager.stopAndResetSounds();
         world.character.resetIdleTimers();
-        world = null;  // Setzt die `world`-Instanz auf null, um alle Referenzen zu löschen
+        world = null;
     }
 
     // Canvas leeren
@@ -36,9 +40,17 @@ function restartGame() {
     // Neue Welt-Instanz erstellen und initialisieren
     world = new World(canvas, keyboard, audioManager);
     world.resetWorld();
-
     initEventListeners();
-    console.log("Spiel wurde vollständig zurückgesetzt und neu gestartet.");
+}
+
+function home() {
+    // Blendet die Button-Gruppe aus
+    document.querySelector('.btn-container').style.display = 'none';
+
+    // Führen Sie hier den Code aus, der die Rückkehr zum Startbildschirm oder Hauptmenü ermöglicht
+    // z. B. Startbildschirm anzeigen oder Spiel zurücksetzen, wenn ein Home-Bildschirm existiert
+    document.getElementById('start').style.display = 'block';
+    document.getElementById('canvas').style.display = 'none';
 }
 
 

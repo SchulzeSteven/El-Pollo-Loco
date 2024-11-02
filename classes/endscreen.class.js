@@ -13,6 +13,11 @@ class EndScreen extends DrawableObjekt {
         img.src = imagePath;
         img.onload = () => {
             ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            // Nach 3 Sekunden die Buttons anzeigen
+            setTimeout(() => {
+                world.showBtnContainer();
+            }, 2000); // 3000 ms = 3 Sekunden
         };
     }
 }

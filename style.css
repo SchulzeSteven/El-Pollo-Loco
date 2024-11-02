@@ -85,7 +85,7 @@ canvas {
     border: none;
     background: orange;
     padding: 12px 20px;
-    font-family: 'zabras';
+    font-family: 'zabars';
     font-size: 32px;
     border-radius: 12px;
 }
@@ -99,4 +99,34 @@ canvas {
     border: none;
     background: transparent;
     z-index: 100;
+}
+
+.btn-container {
+    font-family: 'zabars';
+    display: flex;
+    justify-content: center;
+    gap: 200px;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btns.restart {
+    cursor: pointer;
+    background: orange;
+    padding: 12px 20px;
+    font-family: 'zabars', Arial, sans-serif;
+    font-size: 32px;
+    border-radius: 12px;
+    border: none;
+    opacity: 1;
+    transition: opacity 0.5s ease, background-color 0.5s ease;
+}
+
+.btns.disabled {
+    background: orange;
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
 }
