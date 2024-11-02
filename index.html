@@ -41,7 +41,10 @@
             <h1>El Pollo Loco</h1>
             <div id="start" class="startScreen">
                 <img class="startScreen-img" src="./assets/img/9_intro_outro_screens/start/startscreen_1.png" alt="">
-                <button onclick="startGame()" class="start-button">Start</button>
+                <div class="startbtn-container">
+                    <button onclick="startGame()" class="start-button">Start</button>
+                    <button onclick="impressum()" class="start-button impressum-button">Impressum</button>
+                </div>
             </div>
             <div class="btn-container" style="display: none;">
                 <button onclick="home()" id="home" class="btns restart">Home</button>
@@ -49,21 +52,32 @@
             </div>
             <canvas id="canvas" width="720" height="480" style="display: none;"></canvas>
         </div>
+        <div id="impressum" style="display: none;">
+            <h2>Impressum</h2>
+            <div class="impressum-content">
+                <div class="impressum-section">
+                    <p>Steven Schulze</p>
+                    <p>Johannisthaler Chaussee 372</p>
+                    <p>12351 Berlin</p> 
+                    <p>E-Mail: <a href="mailto:schulze89@hotmail.de">schulze89@hotmail.de</a></p>
+                </div>
+            </div>
+            <button onclick="home()" class="back-btn">BACK</button>
+        </div>
         <div class="controls">
             <div>
-                <h2>D = Throw</h2>
-                <h2>SPACE = Jump</h2>
+                <h4>D = Throw</h4>
+                <h4>SPACE = Jump</h4>
             </div>
             <div>
-                <h2>LEFT = MoveLeft</h2>
-                <h2>RIGHT = MoveRight</h2>
+                <h4>LEFT = MoveLeft</h4>
+                <h4>RIGHT = MoveRight</h4>
             </div>
             <div>
-                <h2># = DevOpt.</h2>
-                <h2>M = Mute/Unmute</h2>
+                <h4># = DevOpt.</h4>
+                <h4>M = Mute/Unmute</h4>
             </div>
         </div>
-        <p>Mute Sound? Just start the game</p>
     </div>
     
 </body>

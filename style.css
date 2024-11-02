@@ -18,13 +18,20 @@ body {
 }
 
 h1 {
-    font-size: 56px;
-    text-decoration: underline;
-    margin: 0;
+    font-size: 72px;
+    margin: 16px;
 }
 
 h2 {
+    font-weight: unset;
+    text-decoration: underline;
+    font-size: 40px;
+    margin: 0;
+}
+
+h4 {
     margin: 10px;
+    font-size: 24px;
     font-weight: unset;
 }
 
@@ -78,16 +85,25 @@ canvas {
 
 .start-button {
     cursor: pointer;
-    position: absolute;
-    top: 10%;
-    left: 9%;
-    transform: translate(-50%, -50%);
-    border: none;
     background: orange;
     padding: 12px 20px;
-    font-family: 'zabars';
+    font-family: 'zabars', Arial, sans-serif;
     font-size: 32px;
     border-radius: 12px;
+    border: none;
+    opacity: 1;
+    transition: opacity 0.5s ease, background-color 0.5s ease;
+}
+
+.startbtn-container {
+    font-family: 'zabars', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    gap: 400px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .mute-btn {
@@ -102,12 +118,12 @@ canvas {
 }
 
 .btn-container {
-    font-family: 'zabars';
+    font-family: 'zabars', Arial, sans-serif;
     display: flex;
     justify-content: center;
     gap: 200px;
     position: absolute;
-    top: 65%;
+    top: 68%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -129,4 +145,52 @@ canvas {
     opacity: 0.4;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+#impressum {
+    max-width: 600px;
+    margin: 24px auto;
+    text-align: center;
+    padding: 16px;
+    border-radius: 10px;
+    border-style: dashed;
+    height: 472px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.impressum-content {
+    margin-top: 20px;
+}
+
+.impressum-section {
+    margin-bottom: 160px;
+}
+
+.impressum-section p {
+    font-size: 24px;
+    font-style: italic;
+    margin: 8px 0px;
+}
+
+.impressum-section a {
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    padding: 0px 10px;
+}
+
+.impressum-section a:hover {
+    text-decoration: underline;
+}
+
+.back-btn {
+    cursor: pointer;
+    background: orange;
+    padding: 12px 20px;
+    font-family: 'zabars', Arial, sans-serif;
+    font-size: 24px;
+    border-radius: 8px;
+    border: none;
 }

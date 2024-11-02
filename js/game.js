@@ -44,13 +44,24 @@ function restartGame() {
 }
 
 function home() {
-    // Blendet die Button-Gruppe aus
+    // Impressum und Button-Gruppe ausblenden
+    document.getElementById('impressum').style.display = 'none';
     document.querySelector('.btn-container').style.display = 'none';
 
-    // Führen Sie hier den Code aus, der die Rückkehr zum Startbildschirm oder Hauptmenü ermöglicht
-    // z. B. Startbildschirm anzeigen oder Spiel zurücksetzen, wenn ein Home-Bildschirm existiert
+    // Startbildschirm und Controls anzeigen, Canvas ausblenden
     document.getElementById('start').style.display = 'block';
+    document.querySelector('.controls').style.display = 'flex';
     document.getElementById('canvas').style.display = 'none';
+}
+
+function impressum() {
+    // Canvas, Startbildschirm und Controls ausblenden
+    document.getElementById('canvas').style.display = 'none';
+    document.getElementById('start').style.display = 'none';
+    document.querySelector('.controls').style.display = 'none';
+    
+    // Impressum einblenden
+    document.getElementById('impressum').style.display = 'flex';
 }
 
 

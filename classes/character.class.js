@@ -101,29 +101,31 @@ class Character extends MoveableObject {
         if (this.isDead() || this.world.endbossDefeated) {
             return;
         }
-
+    
         let currentTime = new Date().getTime();
-
+    
         if (currentTime - this.lastBounceTime < this.bounceCooldown) {
             return; // Wenn der letzte Bounce zu kürzlich war, keine weitere Kollision
         }
-
+    
         let chickenHit = false;
-
+    
         for (let chicken of chickens) {
-            if (this.isCollidingTop(chicken) && !chickenHit) {
+            // Prüft, ob der Charakter wirklich von oben auf den Gegner fällt
+            if (this.isCollidingTop(chicken) && this.speedY < 0 && !chickenHit) {
                 this.bounceOff(); // Der Charakter springt zurück, wenn er von oben auf das Huhn springt
-                chicken.takeHit(); // Das Huhn nimmt einen Treffer
+                chicken.takeHit(); // Das Huhn nimmt einen Treffer und wird eventuell entfernt
                 chickenHit = true; // Markiert, dass ein Huhn getroffen wurde
                 this.lastBounceTime = currentTime; // Aktualisiert die Zeit des letzten Bounces
                 break; // Beendet die Schleife, sodass nur ein Huhn getroffen wird
             } 
-            // Seitliche Kollisionen deaktivieren, wenn gerade ein Bounce erfolgt ist
+            // Verhindert Schaden für das Huhn bei seitlicher Kollision
             else if (this.isColliding(chicken) && !this.isHurt() && !chickenHit) {
-                this.hit(chicken); // Normale Kollision, wenn nicht von oben und nicht verletzt
+                this.hit(chicken); // Normale Kollision, aber kein Tod für das Huhn bei seitlicher Kollision
             }
         }
     }
+    
 
     animate() {
         // Erstellen und Speichern aller Intervalle im Array
