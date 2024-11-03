@@ -35,6 +35,8 @@ class Chicken_Small extends MoveableObject {
 
     takeHit() {
         this.hitsToKill--;
+        this.world.audioManager.play('chickenSmallHit'); // Spielt den kleinen Hühner-Treffer-Sound ab
+    
         if (this.hitsToKill <= 0) {
             this.removeChicken();
         }

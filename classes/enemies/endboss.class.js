@@ -176,8 +176,12 @@ class Endboss extends MoveableObject {
         console.log('Endboss besiegt und entfernt');
         this.clearIntervals();
         this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
-        this.world.stopGame();
-        this.world.audioManager.playWinMusic();
+        
+        // 2 Sekunden Verzögerung hinzufügen, bevor das Spiel gestoppt und die Win-Musik abgespielt wird
+        setTimeout(() => {
+            this.world.stopGame();
+            this.world.audioManager.playWinMusic();
+        }, 400); // 2000 ms = 2 Sekunden
     }
 
     checkCollisionWithBottle(bottle) {

@@ -36,10 +36,20 @@ class Chicken_Normal extends MoveableObject {
 
     takeHit() {
         if (this.hitsToKill > 0) {
-            this.hitsToKill--;  // Trefferanzahl um 1 reduzieren
+            this.hitsToKill--;
+    
+            // Pausiere und setze den Sound zurück, dann spiele ihn neu ab
+            const sound = this.world.audioManager.sounds['chickenBigHit'];
+            if (sound) {
+                sound.pause();
+                sound.currentTime = 0;
+                sound.play();
+            }
+    
             console.log(`Chicken_Normal getroffen, verbleibende Treffer: ${this.hitsToKill}`);
+            
             if (this.hitsToKill <= 0) {
-                this.removeChicken(); // Entfernt das Huhn nach den benötigten Treffern
+                this.removeChicken();
             }
         }
     }

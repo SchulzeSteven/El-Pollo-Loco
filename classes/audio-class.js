@@ -8,7 +8,9 @@ class AudioManager {
             throwing: new Audio('./audio/throw.mp3'),
             background: new Audio('./audio/backgroundMusic.mp3'),
             gameover: new Audio('./audio/gameover.mp3'),
-            win: new Audio('./audio/win.mp3')
+            win: new Audio('./audio/win.mp3'),
+            chickenSmallHit: new Audio('./audio/chickenSmall.mp3'),
+            chickenBigHit: new Audio('./audio/chicken_big.mp3'),
         };
 
         this.sounds.background.volume = 0.2;
