@@ -36,6 +36,7 @@
     
 </head>
 <body onload="init()">
+    <div id="orientation-warning" style="display: none;">Turn your Device to play.</div>
     <div class="main">
         <div class="content">
             <h1>El Pollo Loco</h1>
@@ -50,6 +51,7 @@
                 <button onclick="home()" id="home" class="btns restart">Home</button>
                 <button onclick="restartGame()" id="reset" class="btns restart">Restart</button>
             </div>
+            <div id="mute-button" class="mute-btn">🔇</div>
             <canvas id="canvas" width="720" height="480" style="display: none;"></canvas>
         </div>
         <div id="impressum" style="display: none;">
@@ -78,6 +80,42 @@
                 <h4>M = Mute/Unmute</h4>
             </div>
         </div>
+        <!-- Mobile Movement Controls -->
+        <section id="mobile-movement-container" class="mobile-movement-container" style="display: none;">
+            <div class="mobile-movement">
+                <div
+                  ontouchstart="startMobileMovement('LEFT')"
+                  ontouchend="stopMobileMovement('LEFT')"
+                  class="mobile-button"
+                >
+                    LEFT
+                </div>
+                <div
+                  ontouchstart="startMobileMovement('RIGHT')"
+                  ontouchend="stopMobileMovement('RIGHT')"
+                  class="mobile-button"
+                >
+                    RIGHT
+                </div>
+            </div>
+            <div class="mobile-movement">
+                <div
+                  ontouchstart="startMobileMovement('SPACE')"
+                  ontouchend="stopMobileMovement('SPACE')"
+                  class="mobile-button"
+                >
+                    JUMP
+                </div>
+                <div
+                  ontouchstart="startMobileMovement('THROW')"
+                  ontouchend="stopMobileMovement('THROW')"
+                  class="mobile-button"
+                >
+                    THROW
+                </div>
+            </div>
+        </section>
+        
     </div>
     
 </body>

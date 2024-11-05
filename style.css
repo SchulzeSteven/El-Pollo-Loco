@@ -194,3 +194,175 @@ canvas {
     border-radius: 8px;
     border: none;
 }
+
+#orientation-warning {
+    display: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .hide-content {
+    display: none !important;
+}
+
+.mobile-movement div{
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+  
+  .mobile-movement{
+    display: flex;
+    gap: 40px;
+  }
+  
+  .mobile-movement-container{
+    display: flex;
+    flex-direction: row;
+    gap: 370px;
+    position: absolute;
+    bottom: 0%;
+    font-size: 24px;
+  }
+
+  #mute-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000; /* Stellt sicher, dass es über dem Canvas angezeigt wird */
+}
+
+
+  @media (max-width: 950px) and (orientation: portrait) {
+    #orientation-warning {
+        display: flex !important;
+    }
+
+    body > *:not(#orientation-warning) {
+        display: none !important;
+    }
+}
+
+@media (max-width: 850px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 48px;
+        margin: 12px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    h4 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    p {
+        font-size: 18px;
+        margin: 5px 0;
+        text-align: center;
+    }
+
+    .startScreen {
+        width: 90%;
+        height: auto;
+    }
+
+    .startbtn-container {
+        /* gap: 10px; */
+        justify-content: center;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .btns.restart,
+    .start-button {
+        font-size: 24px;
+        padding: 8px 12px;
+    }
+
+    .impressum-section {
+        margin-bottom: unset;
+    }
+
+    .impressum-content {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    canvas {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media only screen and (max-height: 820px) {
+    canvas {
+      height: 357px;
+      width: 652px;
+    }
+
+    .startScreen {
+        height: 357px;
+        width: 652px;
+    }
+
+    h1 {
+        display: none;
+    }
+
+    .btn-container {
+        top: 80%;
+    }
+
+    .controls {
+        display: none;
+    }
+
+    .impressum-section {
+        margin-bottom: unset;
+    }
+
+    .impressum-content {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .mobile-movement-container {
+        position: absolute;
+        bottom: 2%;
+    }
+  }
+
+

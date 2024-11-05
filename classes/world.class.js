@@ -151,11 +151,14 @@ class World {
         if (this.character.isDead()) {
             this.stopGame();
             this.endScreen.drawEndScreen(this.ctx, false); // Game Over-Bild anzeigen
+            document.getElementById("mobile-movement-container").style.display = "none";
         } else if (this.endbossDefeated) {
             this.stopGame();
             this.endScreen.drawEndScreen(this.ctx, true); // Win-Bild anzeigen
+            document.getElementById("mobile-movement-container").style.display = "none";
         }
     }
+    
     
     showBtnContainer() {
         const btnContainer = document.querySelector('.btn-container');
@@ -190,25 +193,52 @@ class World {
     }
 
     setupCanvasClickListener() {
-        this.canvas.addEventListener('click', (event) => {
-            if (this.gameStopped) return; // Keine Aktion, wenn das Spiel gestoppt ist
-    
-            let rect = this.canvas.getBoundingClientRect();
-            let mouseX = event.clientX - rect.left;
-            let mouseY = event.clientY - rect.top;
-    
-            // Überprüfen, ob der Klick innerhalb des Mute-Buttons war
-            if (mouseX >= this.muteButton.x && mouseX <= this.muteButton.x + this.muteButton.width &&
-                mouseY >= this.muteButton.y && mouseY <= this.muteButton.y + this.muteButton.height) {
-                this.audioManager.toggleMute(); // Schalte den Mute-Status um und aktualisiere das Icon
-            }
+        // Fügt Event-Listener für Klick und Berührung hinzu
+        this.canvas.addEventListener('click', (event) => this.handleMuteButtonClick(event));
+        this.canvas.addEventListener('touchstart', (event) => {
+            event.preventDefault(); // Verhindert Konflikte zwischen Touch und Klick
+            this.handleMuteButtonClick(event);
         });
     }
+    
+    handleMuteButtonClick(event) {
+        if (this.gameStopped) return; // Keine Aktion, wenn das Spiel gestoppt ist
+    
+        let rect = this.canvas.getBoundingClientRect();
+        let mouseX, mouseY;
+    
+        // Unterscheidet zwischen Klick und Berührung
+        if (event.type === 'touchstart') {
+            mouseX = event.touches[0].clientX - rect.left;
+            mouseY = event.touches[0].clientY - rect.top;
+        } else { // Für Klick-Ereignis
+            mouseX = event.clientX - rect.left;
+            mouseY = event.clientY - rect.top;
+        }
+    
+        // Überprüfen, ob der Klick innerhalb des Mute-Buttons war
+        if (mouseX >= this.muteButton.x && mouseX <= this.muteButton.x + this.muteButton.width &&
+            mouseY >= this.muteButton.y && mouseY <= this.muteButton.y + this.muteButton.height) {
+            this.audioManager.toggleMute(); // Schaltet den Mute-Status um
+        }
+    }
+    
+    
 
     toggleMute() {
         this.isMuted = !this.isMuted;
         this.isMuted ? this.audioManager.muteAll() : this.audioManager.unmuteAll();
-        this.drawMuteButton();
+        this.updateMuteButtonIcon();
+    }
+    
+    // Aktualisiert das Mute-Button-Icon basierend auf dem Mute-Status
+    updateMuteButtonIcon() {
+        const muteButton = document.getElementById('mute-button');
+        if (this.isMuted) {
+            muteButton.textContent = '🔇'; // Symbol für stumm
+        } else {
+            muteButton.textContent = '🔊'; // Symbol für Ton an
+        }
     }
 
     drawMuteButton() {
