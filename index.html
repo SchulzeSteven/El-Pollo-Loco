@@ -51,7 +51,6 @@
                 <button onclick="home()" id="home" class="btns restart">Home</button>
                 <button onclick="restartGame()" id="reset" class="btns restart">Restart</button>
             </div>
-            <div id="mute-button" class="mute-btn">🔇</div>
             <canvas id="canvas" width="720" height="480" style="display: none;"></canvas>
         </div>
         <div id="impressum" style="display: none;">
@@ -98,6 +97,7 @@
                     RIGHT
                 </div>
             </div>
+            <img id="mute-button" src="./assets/img/icons/volume-on.png" class="mute-btn-mobile" alt="Mute Button" onclick="world.toggleMute()">
             <div class="mobile-movement">
                 <div
                   ontouchstart="startMobileMovement('SPACE')"

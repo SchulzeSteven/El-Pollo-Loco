@@ -232,27 +232,21 @@ canvas {
   .mobile-movement-container{
     display: flex;
     flex-direction: row;
-    gap: 370px;
+    gap: 165px;
     position: absolute;
     bottom: 0%;
     font-size: 24px;
   }
 
-  #mute-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  .mute-btn-mobile {
     width: 40px;
     height: 40px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
     font-size: 24px;
-    display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 1000; /* Stellt sicher, dass es über dem Canvas angezeigt wird */
+    z-index: 1000;
 }
 
 

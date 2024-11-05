@@ -223,21 +223,22 @@ class World {
         }
     }
     
-    
+    isHtmlMuteButtonVisible() {
+        const muteButton = document.getElementById('mute-button');
+        return muteButton && muteButton.style.display === 'flex';
+    }
 
     toggleMute() {
-        this.isMuted = !this.isMuted;
-        this.isMuted ? this.audioManager.muteAll() : this.audioManager.unmuteAll();
-        this.updateMuteButtonIcon();
+        if (this.audioManager) {
+            this.audioManager.toggleMute(); // Ruft den AudioManager-Mute-Toggle auf
+        }
+        this.updateHtmlMuteIcon(); // Aktualisiert das HTML-Icon basierend auf dem Mute-Status
     }
     
-    // Aktualisiert das Mute-Button-Icon basierend auf dem Mute-Status
-    updateMuteButtonIcon() {
+    updateHtmlMuteIcon() {
         const muteButton = document.getElementById('mute-button');
-        if (this.isMuted) {
-            muteButton.textContent = '🔇'; // Symbol für stumm
-        } else {
-            muteButton.textContent = '🔊'; // Symbol für Ton an
+        if (muteButton) {
+            muteButton.src = this.audioManager.isMuted ? './assets/img/icons/volume-off.png' : './assets/img/icons/volume-on.png';
         }
     }
 
@@ -248,7 +249,7 @@ class World {
 
     draw() {
         if (this.handleCharacterDeath()) return;
-
+    
         this.checkGameEnd();
         this.clearCanvas();
         this.ctx.translate(this.camera_x, 0);
@@ -263,9 +264,15 @@ class World {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
-        this.drawMuteButton();
+        
+        // Nur zeichnen, wenn der HTML-Mute-Button nicht sichtbar ist
+        if (!this.isHtmlMuteButtonVisible()) {
+            this.drawMuteButton();
+        }
+        
         this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
+    
 
     handleCharacterDeath() {
         if (this.character.isDead()) {

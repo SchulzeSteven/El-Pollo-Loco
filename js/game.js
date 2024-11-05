@@ -7,7 +7,7 @@ const endScreen = new EndScreen();
 function init() {
     canvas = document.getElementById("canvas");
 
-    // Setze das Standard-Symbol auf "Ton an"
+    // Standardmäßig "Ton an"-Symbol, aber ausgeblendet
     const muteButton = document.getElementById('mute-button');
     muteButton.textContent = '🔊';
 
@@ -16,12 +16,13 @@ function init() {
         if (world) world.toggleMute();
     });
     muteButton.addEventListener('touchstart', (event) => {
-        event.preventDefault(); // Verhindert, dass `click` zusätzlich ausgelöst wird
+        event.preventDefault(); // Verhindert doppeltes Event
         if (world) world.toggleMute();
     });
 
-    // Das Spiel wird erst gestartet, wenn der Benutzer auf "Start" klickt
+    // Spiel wird erst gestartet, wenn der Benutzer auf "Start" klickt
 }
+
 
 
 function startGame() {
@@ -57,6 +58,7 @@ function startGame() {
     world = new World(canvas, keyboard, audioManager);
     world.resetWorld();
     initEventListeners();
+    updateControlsVisibility();
 
     // Zeigt die mobilen Steuerungen an, falls die Bildschirmbreite unter 950px liegt
     if (window.innerWidth < 950) {
@@ -95,6 +97,7 @@ function restartGame() {
     world = new World(canvas, keyboard, audioManager);
     world.resetWorld();
     initEventListeners();
+    updateControlsVisibility();
 
     // Zeige die mobilen Steuerungen, wenn die Bildschirmbreite unter 950px ist
     if (window.innerWidth < 950) {
@@ -126,22 +129,26 @@ function home() {
 function updateControlsVisibility() {
     const controls = document.querySelector('.controls');
     const mobileMovementContainer = document.getElementById("mobile-movement-container");
+    const muteButton = document.getElementById("mute-button");
 
+    // Steuerungen für kleinere und größere Bildschirmbreiten anpassen
     if (window.innerWidth < 950) {
-        // Bei kleineren Bildschirmbreiten
-        controls.style.display = 'none';
+        controls.style.display = 'none'; // Steuerungen ausblenden bei kleinen Bildschirmen
     } else {
-        // Bei größeren Bildschirmbreiten
-        controls.style.display = 'flex';
+        controls.style.display = 'flex'; // Steuerungen anzeigen bei großen Bildschirmen
     }
 
-    // mobileMovementContainer nur anzeigen, wenn das Spiel läuft
+    // Zeige mobileMovementContainer und muteButton nur, wenn das Spiel läuft und die Breite < 950px ist
     if (world && !world.gameStopped && window.innerWidth < 950) {
         mobileMovementContainer.style.display = 'flex';
+        muteButton.style.display = 'flex'; // Soundsymbol anzeigen
     } else {
         mobileMovementContainer.style.display = 'none';
+        muteButton.style.display = 'none'; // Soundsymbol ausblenden
     }
 }
+
+
 
 
 function showMovementContainer() {
