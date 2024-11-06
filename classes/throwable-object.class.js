@@ -30,23 +30,43 @@ class ThrowableObject extends MoveableObject {
 
 
     throw() {
+        this.initializeThrow();
+        this.startAnimation();
+        this.startMovement();
+    }
+    
+
+    initializeThrow() {
         this.speedY = 25;
         this.applyGravity();
+    }
+    
+
+    startAnimation() {
         this.animationInterval = setInterval(() => {
             if (!this.isOnGround) {
                 this.playAnimation(this.IMAGES_THROWING);
             }
         }, 100);
+    }
     
+
+    startMovement() {
         this.moveInterval = setInterval(() => {
             if (this.y >= 350 && !this.isOnGround) {
                 this.onGround();
             } else {
-                this.x += this.direction === 'right' ? 12 : -12;
-                this.checkCollisionWithChickens();
+                this.updatePosition();
             }
         }, 25);
     }
+    
+    
+    updatePosition() {
+        this.x += this.direction === 'right' ? 12 : -12;
+        this.checkCollisionWithChickens();
+    }
+    
     
 
     checkCollisionWithChickens() {

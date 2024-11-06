@@ -97,21 +97,24 @@ class AudioManager {
 
 
     setupMuteToggle() {
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'm' || event.key === 'M') {
-                this.toggleMute();
-            }
-        });
+        if (!this.muteToggleAdded) {
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'm' || event.key === 'M') {
+                    this.toggleMute();
+                }
+            });
+            this.muteToggleAdded = true;
+        }
     }
 
 
     toggleMute() {
-    this.isMuted = !this.isMuted;
-    this.isMuted ? this.muteAll() : this.unmuteAll();
-    
-    if (this.world) {
-        this.world.clearCanvas();
-        this.world.draw();
+        this.isMuted = !this.isMuted;
+        Object.values(this.sounds).forEach(sound => {
+            sound.muted = this.isMuted;
+            if (!this.isMuted && !sound.paused) {
+                sound.play();
+            }
+        });
     }
-}
 }

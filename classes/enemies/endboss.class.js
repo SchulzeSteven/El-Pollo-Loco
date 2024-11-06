@@ -89,7 +89,7 @@ class Endboss extends MoveableObject {
 
 
     clearIntervals() {
-        this.intervals.forEach(clearInterval);
+        this.intervals.forEach(interval => clearInterval(interval));
         this.intervals = [];
     }
 
@@ -105,30 +105,50 @@ class Endboss extends MoveableObject {
 
 
     takeHit() {
-        if (this.isHurt || !this.hasStartedMoving) 
-            return;
-        this.life -= 20;
+        if (this.shouldIgnoreHit()) return;
     
-        if (this.life <= 19 && this.life > 0) {
-            this.isHurt = false;
-            this.stopWalking();
-            this.playDeadAnimation();
-        } else if (this.life >= 20) {
-            this.isHurt = true;
-            this.stopWalking();
-            this.playHurtAnimation();
-    
-            setTimeout(() => {
-                this.isHurt = false;
-                this.startWalking();
-            }, this.IMAGES_HURT.length * 150);
-        }
+        this.reduceLife();
         this.world.statusBar.updateEndbossLife(this.life);
     
-        if (this.life <= 0) {
-            this.stopWalking();
-            this.playDeadAnimation();
+        if (this.isAlive()) {
+            this.handleHurtState();
+        } else {
+            this.handleDeath();
         }
+    }
+    
+    
+    shouldIgnoreHit() {
+        return this.isHurt || !this.hasStartedMoving;
+    }
+    
+
+    reduceLife() {
+        this.life -= 20;
+    }
+    
+
+    isAlive() {
+        return this.life > 0;
+    }
+    
+
+    handleHurtState() {
+        this.isHurt = true;
+        this.stopWalking();
+        this.playHurtAnimation();
+    
+        setTimeout(() => {
+            this.isHurt = false;
+            this.startWalking();
+        }, this.IMAGES_HURT.length * 150);
+    }
+    
+
+    handleDeath() {
+        this.isHurt = false;
+        this.stopWalking();
+        this.playDeadAnimation();
     }
     
 

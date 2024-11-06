@@ -30,7 +30,7 @@ class Chicken_Small extends MoveableObject {
 
 
     clearIntervals() {
-        this.intervals.forEach(clearInterval);
+        this.intervals.forEach(interval => clearInterval(interval));
         this.intervals = [];
     }
 

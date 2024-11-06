@@ -233,14 +233,15 @@ canvas {
     display: flex;
     flex-direction: row;
     gap: 165px;
+    align-items: center;
     position: absolute;
     bottom: 0%;
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .mute-btn-mobile {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     font-size: 24px;
     align-items: center;
     justify-content: center;

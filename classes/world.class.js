@@ -120,19 +120,29 @@ class World {
 
 
     checkThrowObjects() {
+        this.attemptThrowBottle();
+        this.checkCollisionsWithEnemies();
+    }
+    
+
+    attemptThrowBottle() {
         if (this.keyboard.D && this.statusBar.bottleCount > 0 && !this.throwCooldown) {
             this.character.resetIdleTimers();
             
-            let direction = this.character.otherDirection ? 'left' : 'right';
-            let offsetX = direction === 'right' ? 60 : -30;
-            let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
+            const direction = this.character.otherDirection ? 'left' : 'right';
+            const offsetX = direction === 'right' ? 60 : -30;
+            const bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
             bottle.world = this;
+            
             this.throwableObjects.push(bottle);
             this.statusBar.setBottleCount(this.statusBar.bottleCount - 1);
             this.audioManager.play('throwing');
             this.activateThrowCooldown();
         }
+    }
     
+
+    checkCollisionsWithEnemies() {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
                 if (enemy instanceof Endboss) {
@@ -141,7 +151,7 @@ class World {
             });
         });
     }
-
+    
 
     activateThrowCooldown() {
         this.throwCooldown = true;
@@ -312,33 +322,78 @@ class World {
 
     resetWorld() {
         this.clearIntervals();
-        Bottle.lastX = 0;
-        Bottle.minSpacing = 100;
-        this.level = new Level(
-            level1.enemies.map(enemy => new enemy.constructor()),
-            level1.coins.map(() => new Coin()),
-            Array.from({ length: 12 }, () => {
-                let bottle = new Bottle();
-                bottle.setRandomXPosition();
-                return bottle;
-            }),
-            level1.clouds.map(() => new Cloud()),
-            level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x))
-        );
-        this.throwableObjects = [];
-        this.endbossMovementStarted = false;
-        this.throwCooldown = false;
-        this.endbossDefeated = false;
-        this.gameStopped = false;
-        if (this.character) {
-            this.character.clearIntervals();
-        }
-        this.character = new Character(this.audioManager);
+        this.resetBottleProperties();
+        this.initializeLevel();
+        this.resetGameState();
+        this.resetCharacter();
         this.initializeWorld();
         this.checkCollisions();
         this.checkEndbossMovement();
     }
+    
 
+    resetBottleProperties() {
+        Bottle.lastX = 0;
+        Bottle.minSpacing = 100;
+    }
+    
+
+    initializeLevel() {
+        this.level = new Level(
+            this.createEnemies(),
+            this.createCoins(),
+            this.createBottles(),
+            this.createClouds(),
+            this.createBackgroundObjects()
+        );
+        this.throwableObjects = [];
+    }
+    
+
+    createEnemies() {
+        return level1.enemies.map(enemy => new enemy.constructor());
+    }
+    
+
+    createCoins() {
+        return level1.coins.map(() => new Coin());
+    }
+    
+
+    createBottles() {
+        return Array.from({ length: 12 }, () => {
+            const bottle = new Bottle();
+            bottle.setRandomXPosition();
+            return bottle;
+        });
+    }
+    
+
+    createClouds() {
+        return level1.clouds.map(() => new Cloud());
+    }
+    
+
+    createBackgroundObjects() {
+        return level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x));
+    }
+    
+
+    resetGameState() {
+        this.endbossMovementStarted = false;
+        this.throwCooldown = false;
+        this.endbossDefeated = false;
+        this.gameStopped = false;
+    }
+    
+
+    resetCharacter() {
+        if (this.character) {
+            this.character.clearIntervals();
+        }
+        this.character = new Character(this.audioManager);
+    }
+    
     
     addObjectsToMap(objects) {
         objects.forEach(object => {

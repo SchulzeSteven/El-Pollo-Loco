@@ -120,91 +120,138 @@ class Character extends MoveableObject {
     
 
     animate() {
-        this.intervals.push(setInterval(() => {
-            if (this.isDead() || this.world.gameStopped) {
-                this.audioManager.pause('walking');
-                this.audioManager.pause('jumping');
-                this.audioManager.pause('snoring');
-                this.audioManager.pause('hurting');
-                return;
-            }
+        this.intervals.push(this.createMovementInterval());
+        this.intervals.push(this.createCollisionCheckInterval());
+        this.intervals.push(this.createJumpAndWalkAnimationInterval());
+        this.intervals.push(this.createIdleAnimationInterval());
+    }
+    
 
-            this.audioManager.pause('walking');
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.resetIdleTimers();
-                this.otherDirection = false;
-                if (!this.isAboveGround()) {
-                    this.audioManager.play('walking');
-                    this.audioManager.pause('snoring');
-                }
-            }
+    createMovementInterval() {
+        return setInterval(() => {
+            if (this.shouldStopAnimation()) return;
+    
+            this.handleWalking();
+            this.handleJumping();
+            this.updateCamera();
+        }, 1000 / 60);
+    }
+    
 
-            if (this.world.keyboard.LEFT && this.x > -400) {
-                this.moveLeft();
-                this.resetIdleTimers();
-                this.otherDirection = true;
-                if (!this.isAboveGround()) {
-                    this.audioManager.play('walking');
-                    this.audioManager.pause('snoring');
-                }
-            }
-
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-                this.jump();
-                this.resetIdleTimers();
-                this.audioManager.play('jumping');
-                this.audioManager.pause('snoring');
-            }
-
-            this.world.camera_x = -this.x + 100;
-        }, 1000 / 60));
-
-        setInterval(() => {
-            this.checkCollisionsWithChickens(this.world.level.enemies.filter(enemy => enemy instanceof Chicken_Normal || enemy instanceof Chicken_Small));
+    createCollisionCheckInterval() {
+        return setInterval(() => {
+            const chickens = this.world.level.enemies.filter(enemy => enemy instanceof Chicken_Normal || enemy instanceof Chicken_Small);
+            this.checkCollisionsWithChickens(chickens);
         }, 25);
+    }
+    
 
-        /* JUMP and WALK Timers */
-        setInterval(() => {
+    createJumpAndWalkAnimationInterval() {
+        return setInterval(() => {
             if (this.isDead()) {
-                if (!this.animationStarted) {
-                    this.playDeadAnimationOnce();
-                } 
+                this.playDeadAnimationOnce();
             } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                this.resetIdleTimers();
-                this.audioManager.pause('snoring');
+                this.playHurtAnimation();
             } else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.playAnimation(this.IMAGES_WALKING);
             }
         }, 80);
+    }
+    
 
-        /* IDLES Timers */
-        setInterval(() => {
+    createIdleAnimationInterval() {
+        return setInterval(() => {
             if (this.isDead()) {
                 this.audioManager.pause('snoring');
                 return;
             }
-    
-            if (!this.world.gameStopped && !this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
-                if (this.isLongIdle) {
-                    this.playAnimation(this.IMAGES_IDLE_LONG);
-                    this.audioManager.play('snoring');
-                } else if (this.isIdle) {
-                    this.playAnimation(this.IMAGES_IDLE);
-                } else {
-                    this.loadImage('./assets/img/2_character_pepe/1_idle/idle/I-1.png');
-                    this.audioManager.pause('snoring');
-                }
+            if (this.shouldPlayIdleAnimation()) {
+                this.playIdleAnimation();
             } else {
                 this.audioManager.pause('snoring');
             }
         }, 200);
     }
+    
+    
+    shouldStopAnimation() {
+        if (this.isDead() || this.world.gameStopped) {
+            this.audioManager.pause('walking');
+            this.audioManager.pause('jumping');
+            this.audioManager.pause('snoring');
+            this.audioManager.pause('hurting');
+            return true;
+        }
+        return false;
+    }
+    
 
+    handleWalking() {
+        this.audioManager.pause('walking');
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.resetIdleTimers();
+            this.otherDirection = false;
+            this.playWalkingSound();
+        }
+        if (this.world.keyboard.LEFT && this.x > -400) {
+            this.moveLeft();
+            this.resetIdleTimers();
+            this.otherDirection = true;
+            this.playWalkingSound();
+        }
+    }
+    
 
+    handleJumping() {
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            this.jump();
+            this.resetIdleTimers();
+            this.audioManager.play('jumping');
+            this.audioManager.pause('snoring');
+        }
+    }
+    
+    updateCamera() {
+        this.world.camera_x = -this.x + 100;
+    }
+    
+
+    playWalkingSound() {
+        if (!this.isAboveGround()) {
+            this.audioManager.play('walking');
+            this.audioManager.pause('snoring');
+        }
+    }
+    
+
+    playHurtAnimation() {
+        this.playAnimation(this.IMAGES_HURT);
+        this.resetIdleTimers();
+        this.audioManager.pause('snoring');
+    }
+    
+
+    shouldPlayIdleAnimation() {
+        return !this.world.gameStopped && !this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT;
+    }
+    
+
+    playIdleAnimation() {
+        if (this.isLongIdle) {
+            this.playAnimation(this.IMAGES_IDLE_LONG);
+            this.audioManager.play('snoring');
+        } else if (this.isIdle) {
+            this.playAnimation(this.IMAGES_IDLE);
+        } else {
+            this.loadImage('./assets/img/2_character_pepe/1_idle/idle/I-1.png');
+            this.audioManager.pause('snoring');
+        }
+    }
+    
+    
     clearIntervals() {
         this.intervals.forEach(interval => clearInterval(interval));
         clearTimeout(this.idleTimeout);
@@ -273,7 +320,6 @@ class Character extends MoveableObject {
 
 
     isHurt() {
-        // Überprüfen, ob die Hurt-Animation noch aktiv ist
         let timepassed = new Date().getTime() - this.lastHit;
         return timepassed < this.getHurtDuration();
     }
