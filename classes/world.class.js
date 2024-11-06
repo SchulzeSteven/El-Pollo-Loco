@@ -16,16 +16,15 @@ class World {
     gameStopped = false;
     endScreen = new EndScreen();
     intervals = [];
-
     muteButton = {
-        x: 660,  // Rechts oben
+        x: 660,
         y: 20,
         width: 32,
         height: 32
     };
-
     muteIconOn = new Image();
     muteIconOff = new Image();
+
 
     constructor(canvas, keyboard, audioManager) {
         this.ctx = canvas.getContext('2d');
@@ -41,12 +40,14 @@ class World {
         this.setupCanvasClickListener();
     }
 
+
     initializeWorld() {
         this.draw();
         this.setWorld();
         this.checkCollisions();
         this.checkEndbossMovement();
     }
+
 
     setWorld() {
         audioManager.play('background');
@@ -57,11 +58,11 @@ class World {
         });
     }
 
+
     checkCollisions() {
         const collisionInterval = setInterval(() => {
             if (this.character.isDead()) {
                 clearInterval(collisionInterval);
-                console.log('Character is dead, collisions disabled.');
                 return;
             }
             this.checkEnemyCollisions();
@@ -70,16 +71,15 @@ class World {
             this.checkThrowObjects();
             this.checkEndbossCollision();
         }, 250);
-        
-        // Speichere das Intervall
         this.intervals.push(collisionInterval);
     }
 
+
     clearIntervals() {
-        // Stoppt alle gespeicherten Intervalle
         this.intervals.forEach(interval => clearInterval(interval));
-        this.intervals = [];  // Array zurücksetzen
+        this.intervals = [];
     }
+
 
     checkEnemyCollisions() {
         this.level.enemies.forEach((enemy) => {
@@ -89,6 +89,7 @@ class World {
             }
         });
     }
+
 
     checkCoinCollisions() {
         let collectedCoins = [];
@@ -103,6 +104,7 @@ class World {
         });
     }
 
+
     checkBottleCollisions() {
         let collectedBottles = [];
         this.level.bottles.forEach((bottle, index) => {
@@ -116,13 +118,13 @@ class World {
         });
     }
 
+
     checkThrowObjects() {
         if (this.keyboard.D && this.statusBar.bottleCount > 0 && !this.throwCooldown) {
-            this.character.resetIdleTimers(); // Stoppt die Idle-Animationen, wenn eine Flasche geworfen wird
-    
+            this.character.resetIdleTimers();
+            
             let direction = this.character.otherDirection ? 'left' : 'right';
             let offsetX = direction === 'right' ? 60 : -30;
-    
             let bottle = new ThrowableObject(this.character.x + offsetX, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
@@ -134,11 +136,12 @@ class World {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
                 if (enemy instanceof Endboss) {
-                    enemy.checkCollisionWithBottle(bottle);  // Kollision mit dem Endboss überprüfen
+                    enemy.checkCollisionWithBottle(bottle);
                 }
             });
         });
     }
+
 
     activateThrowCooldown() {
         this.throwCooldown = true;
@@ -147,14 +150,15 @@ class World {
         }, 250);
     }
 
+
     checkGameEnd() {
         if (this.character.isDead()) {
             this.stopGame();
-            this.endScreen.drawEndScreen(this.ctx, false); // Game Over-Bild anzeigen
+            this.endScreen.drawEndScreen(this.ctx, false);
             document.getElementById("mobile-movement-container").style.display = "none";
         } else if (this.endbossDefeated) {
             this.stopGame();
-            this.endScreen.drawEndScreen(this.ctx, true); // Win-Bild anzeigen
+            this.endScreen.drawEndScreen(this.ctx, true);
             document.getElementById("mobile-movement-container").style.display = "none";
         }
     }
@@ -164,15 +168,14 @@ class World {
         const btnContainer = document.querySelector('.btn-container');
         btnContainer.style.display = 'flex';
         
-        // Buttons zuerst deaktivieren und ausgegraut anzeigen
         const buttons = btnContainer.querySelectorAll('.btns');
         buttons.forEach(button => button.classList.add('disabled'));
     
-        // Nach 3 Sekunden aktivieren und normale Farbe anzeigen
         setTimeout(() => {
             buttons.forEach(button => button.classList.remove('disabled'));
         }, 2000);
     }
+
 
     checkEndbossCollision() {
         const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
@@ -181,60 +184,61 @@ class World {
         }
     }
 
+
     checkEndbossMovement() {
         setInterval(() => {
             const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
             if (this.character.x >= 2700 && endboss && !this.endbossMovementStarted) {
                 this.endbossMovementStarted = true;
                 endboss.startMovingLeft();
-                this.statusBar.enableEndbossDisplay();  // Endboss-Bild anzeigen
+                this.statusBar.enableEndbossDisplay();
             }
         }, 1000 / 60);
     }
 
+
     setupCanvasClickListener() {
-        // Fügt Event-Listener für Klick und Berührung hinzu
         this.canvas.addEventListener('click', (event) => this.handleMuteButtonClick(event));
         this.canvas.addEventListener('touchstart', (event) => {
-            event.preventDefault(); // Verhindert Konflikte zwischen Touch und Klick
+            event.preventDefault();
             this.handleMuteButtonClick(event);
         });
     }
     
+
     handleMuteButtonClick(event) {
-        if (this.gameStopped) return; // Keine Aktion, wenn das Spiel gestoppt ist
+        if (this.gameStopped) return;
     
         let rect = this.canvas.getBoundingClientRect();
         let mouseX, mouseY;
-    
-        // Unterscheidet zwischen Klick und Berührung
         if (event.type === 'touchstart') {
             mouseX = event.touches[0].clientX - rect.left;
             mouseY = event.touches[0].clientY - rect.top;
-        } else { // Für Klick-Ereignis
+        } else {
             mouseX = event.clientX - rect.left;
             mouseY = event.clientY - rect.top;
         }
-    
-        // Überprüfen, ob der Klick innerhalb des Mute-Buttons war
         if (mouseX >= this.muteButton.x && mouseX <= this.muteButton.x + this.muteButton.width &&
             mouseY >= this.muteButton.y && mouseY <= this.muteButton.y + this.muteButton.height) {
-            this.audioManager.toggleMute(); // Schaltet den Mute-Status um
+            this.audioManager.toggleMute();
         }
     }
     
+
     isHtmlMuteButtonVisible() {
         const muteButton = document.getElementById('mute-button');
         return muteButton && muteButton.style.display === 'flex';
     }
 
+
     toggleMute() {
         if (this.audioManager) {
-            this.audioManager.toggleMute(); // Ruft den AudioManager-Mute-Toggle auf
+            this.audioManager.toggleMute();
         }
-        this.updateHtmlMuteIcon(); // Aktualisiert das HTML-Icon basierend auf dem Mute-Status
+        this.updateHtmlMuteIcon();
     }
     
+
     updateHtmlMuteIcon() {
         const muteButton = document.getElementById('mute-button');
         if (muteButton) {
@@ -242,14 +246,15 @@ class World {
         }
     }
 
+
     drawMuteButton() {
         let icon = this.audioManager.isMuted ? this.muteIconOff : this.muteIconOn;
         this.ctx.drawImage(icon, this.muteButton.x, this.muteButton.y, this.muteButton.width, this.muteButton.height);
     }
 
+
     draw() {
         if (this.handleCharacterDeath()) return;
-    
         this.checkGameEnd();
         this.clearCanvas();
         this.ctx.translate(this.camera_x, 0);
@@ -264,27 +269,25 @@ class World {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
-        
-        // Nur zeichnen, wenn der HTML-Mute-Button nicht sichtbar ist
         if (!this.isHtmlMuteButtonVisible()) {
             this.drawMuteButton();
         }
-        
         this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
     
 
     handleCharacterDeath() {
         if (this.character.isDead()) {
-            this.character.playDeadAnimationOnce();  // Startet die Todesanimation einmalig
+            this.character.playDeadAnimationOnce();
             if (this.character.isDeadAnimationCompleted()) {
-                this.audioManager.playGameOverMusic();  // Spielt Gameover-Musik ab, wenn die Animation vorbei ist
-                this.stopGame();                        // Stoppt das Spiel
-                return true;                            // Gibt an, dass das Spiel beendet wurde
+                this.audioManager.playGameOverMusic();
+                this.stopGame();
+                return true;
             }
         }
-        return false; // Gibt an, dass das Spiel nicht beendet wurde
+        return false;
     }
+
 
     stopGame() {
         this.gameStopped = true;
@@ -294,58 +297,47 @@ class World {
             clearInterval(this.collisionInterval);
             this.collisionInterval = null;
         }
-    
-        if (this.endbossMovementInterval) {
+         if (this.endbossMovementInterval) {
             clearInterval(this.endbossMovementInterval);
             this.endbossMovementInterval = null;
         }
-    
         this.level.enemies.forEach(enemy => {
             if (enemy.clearIntervals) {
-                enemy.clearIntervals(); // Ruft clearIntervals auf, um alle Gegner-Intervalle zu stoppen
+                enemy.clearIntervals();
             }
         });
-    
         this.throwableObjects = [];
     }
     
 
     resetWorld() {
-    this.clearIntervals();  // Stoppt alle laufenden Kollisions- und Bewegungsintervalle
-    
-    Bottle.lastX = 0;        // Reset für die zufällige Positionierung der Flaschen
-    Bottle.minSpacing = 100; // Mindestabstand auf 100 Pixel setzen
-
-    // Welt und Objekte zurücksetzen
-    this.level = new Level(
-        level1.enemies.map(enemy => new enemy.constructor()),  // Erstellt neue Instanzen aller Gegner
-        level1.coins.map(() => new Coin()),                    // Erstellt neue Münzen
-        Array.from({ length: 12 }, () => {                     // Erstellt genau 12 Flaschen
-            let bottle = new Bottle();
-            bottle.setRandomXPosition();                       // Platziert die Flasche zufällig
-            return bottle;
-        }),
-        level1.clouds.map(() => new Cloud()),                  // Erstellt neue Wolken
-        level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x)) // Erstellt neue Hintergrundobjekte
-    );
-
-    this.throwableObjects = [];
-    this.endbossMovementStarted = false;
-    this.throwCooldown = false;
-    this.endbossDefeated = false;
-    this.gameStopped = false;
-
-    if (this.character) {
-        this.character.clearIntervals();  // Stoppt alle laufenden Timer der alten Charakter-Instanz
+        this.clearIntervals();
+        Bottle.lastX = 0;
+        Bottle.minSpacing = 100;
+        this.level = new Level(
+            level1.enemies.map(enemy => new enemy.constructor()),
+            level1.coins.map(() => new Coin()),
+            Array.from({ length: 12 }, () => {
+                let bottle = new Bottle();
+                bottle.setRandomXPosition();
+                return bottle;
+            }),
+            level1.clouds.map(() => new Cloud()),
+            level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x))
+        );
+        this.throwableObjects = [];
+        this.endbossMovementStarted = false;
+        this.throwCooldown = false;
+        this.endbossDefeated = false;
+        this.gameStopped = false;
+        if (this.character) {
+            this.character.clearIntervals();
+        }
+        this.character = new Character(this.audioManager);
+        this.initializeWorld();
+        this.checkCollisions();
+        this.checkEndbossMovement();
     }
-
-    this.character = new Character(this.audioManager);  // Neue Charakter-Instanz
-    this.initializeWorld();  // Initialisiert die Welt neu
-    
-    // Bewegungsintervalle und Kollisionsprüfungen neu starten
-    this.checkCollisions();
-    this.checkEndbossMovement();
-}
 
     
     addObjectsToMap(objects) {
@@ -354,21 +346,20 @@ class World {
         });
     }
 
+
     addToMap(moveableobject) {
         if (moveableobject.otherDirection) {
             this.flipImage(moveableobject);
         }
-
         moveableobject.draw(this.ctx);
-
         if (this.showFrames) {
             moveableobject.drawFrame(this.ctx);
         }
-
         if (moveableobject.otherDirection) {
             this.flipImageBack(moveableobject);
         }
     }
+
 
     flipImage(moveableobject) {
         this.ctx.save();
@@ -377,21 +368,23 @@ class World {
         moveableobject.x = moveableobject.x * -1;
     }
 
+
     flipImageBack(moveableobject) {
         moveableobject.x = moveableobject.x * -1;
         this.ctx.restore();
     }
+
 
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
 
+
 window.addEventListener('keydown', (event) => {
     if (event.key === '#') {
         if (world) {
             world.showFrames = !world.showFrames;
-            console.log(`Frame drawing is now ${world.showFrames ? 'enabled' : 'disabled'}`);
         }
     }
 });

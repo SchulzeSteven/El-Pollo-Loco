@@ -2,10 +2,10 @@ class EndScreen extends DrawableObjekt {
     IMAGES_GAMEOVER = [
         "./assets/img/9_intro_outro_screens/game_over/game-over.png"
     ];
-    
     IMAGES_WIN = [
         "./assets/img/9_intro_outro_screens/win/win_2.png"
     ];
+
 
     drawEndScreen(ctx, hasWon) {
         const imagePath = hasWon ? this.IMAGES_WIN[0] : this.IMAGES_GAMEOVER[0];
@@ -13,11 +13,9 @@ class EndScreen extends DrawableObjekt {
         img.src = imagePath;
         img.onload = () => {
             ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
-
-            // Nach 3 Sekunden die Buttons anzeigen
             setTimeout(() => {
                 world.showBtnContainer();
-            }, 2000); // 3000 ms = 3 Sekunden
+            }, 2000);
         };
     }
 }

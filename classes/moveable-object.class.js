@@ -17,7 +17,7 @@ class MoveableObject extends DrawableObjekt {
                     this.checkIfLanded();
                 }
             }, 1000 / 25);
-            this.intervals.push(gravityInterval);  // Speichert das Intervall
+            this.intervals.push(gravityInterval);
         }
 
 
@@ -52,8 +52,6 @@ class MoveableObject extends DrawableObjekt {
         isCollidingTop(moveableObject) {
             const redFrame1 = this.getRedFrame();
             const redFrame2 = moveableObject.getRedFrame();
-    
-            // Prüfen, ob der untere Rand des Charakters den oberen Rand des Huhns berührt
             return redFrame1.y + redFrame1.height >= redFrame2.y &&
                    redFrame1.y + redFrame1.height <= redFrame2.y + redFrame2.height / 2 &&
                    redFrame1.x < redFrame2.x + redFrame2.width &&
@@ -98,7 +96,7 @@ class MoveableObject extends DrawableObjekt {
             } else if (enemy instanceof Chicken_Normal) {
                 return 15;
             }
-            return 25; // Standard-Schaden für andere Feinde
+            return 25;
         }
 
 
@@ -122,15 +120,16 @@ class MoveableObject extends DrawableObjekt {
                 const moveInterval = setInterval(() => {
                     this.x -= this.speed;
                 }, 1000 / 60);
-                this.intervals.push(moveInterval);  // Speichert das Intervall
+                this.intervals.push(moveInterval);
             } else {
                 this.x -= this.speed;
             }
         }
 
+
         clearIntervals() {
-            this.intervals.forEach(clearInterval);  // Beendet alle gespeicherten Intervalle
-            this.intervals = [];  // Setzt das Intervall-Array zurück
+            this.intervals.forEach(clearInterval);
+            this.intervals = [];
         }
 
 
@@ -140,6 +139,6 @@ class MoveableObject extends DrawableObjekt {
 
 
         bounceOff() {
-            this.speedY = 25; // Bounce-Effekt
+            this.speedY = 25;
         }
 }

@@ -13,19 +13,20 @@ class AudioManager {
             chickenBigHit: new Audio('./audio/chicken_big.mp3'),
         };
 
+
         this.sounds.background.volume = 0.2;
         this.sounds.throwing.volume = 0.2;
-        this.setGlobalVolume(1);
-
         this.isMuted = false;  
-        this.world = null;  // Referenz auf die World-Instanz
-
-        this.setupMuteToggle();  // Mute-Toggle-Listener einrichten
+        this.world = null;
+        this.setGlobalVolume(1);
+        this.setupMuteToggle();
     }
+
 
     setWorld(world) {
-        this.world = world;  // Welt-Instanz setzen
+        this.world = world;
     }
+
 
     play(soundName) {
         const sound = this.sounds[soundName];
@@ -34,6 +35,7 @@ class AudioManager {
         }
     }
 
+
     pause(soundName) {
         const sound = this.sounds[soundName];
         if (sound) {
@@ -41,24 +43,28 @@ class AudioManager {
         }
     }
 
+
     stopAndResetSounds() {
         for (let soundName in this.sounds) {
             const sound = this.sounds[soundName];
-            sound.pause();              // Stoppt den Sound
-            sound.currentTime = 0;      // Setzt die Wiedergabeposition auf Anfang
+            sound.pause();
+            sound.currentTime = 0;
         }
     }
 
+
     playGameOverMusic() {
-        this.pause('background');  // Hintergrundmusik anhalten
-        this.play('gameover');     // Gameover-Sound abspielen
+        this.pause('background');
+        this.play('gameover');
     }
 
+
     playWinMusic() {
-        this.pause('background');  // Hintergrundmusik anhalten
+        this.pause('background');
         this.setVolume('win', 0.2);
-        this.play('win');          // Win-Sound abspielen
+        this.play('win');
     }
+
 
     setVolume(soundName, volume) {
         const sound = this.sounds[soundName];
@@ -67,16 +73,19 @@ class AudioManager {
         }
     }
 
+
     muteAll() {
         this.setGlobalVolume(0);
         this.sounds.throwing.volume = 0;
     }
+
 
     unmuteAll() {
         this.setGlobalVolume(1);
         this.sounds.background.volume = 0.2;
         this.sounds.throwing.volume = 0.2;
     }
+
 
     setGlobalVolume(volume) {
         for (let sound in this.sounds) {
@@ -86,6 +95,7 @@ class AudioManager {
         }
     }
 
+
     setupMuteToggle() {
         window.addEventListener('keydown', (event) => {
             if (event.key === 'm' || event.key === 'M') {
@@ -94,13 +104,14 @@ class AudioManager {
         });
     }
 
+
     toggleMute() {
     this.isMuted = !this.isMuted;
     this.isMuted ? this.muteAll() : this.unmuteAll();
     
     if (this.world) {
-        this.world.clearCanvas();  // Canvas leeren
-        this.world.draw();  // Die Welt neu zeichnen
+        this.world.clearCanvas();
+        this.world.draw();
     }
 }
 }

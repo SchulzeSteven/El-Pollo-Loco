@@ -3,7 +3,6 @@ class Endboss extends MoveableObject {
     height = 390;
     width = 300;
     speed = 1.2;
-    
     IMAGES_ALERT = [
         './assets/img/4_enemie_boss_chicken/2_alert/G5.png',
         './assets/img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -14,14 +13,12 @@ class Endboss extends MoveableObject {
         './assets/img/4_enemie_boss_chicken/2_alert/G11.png',
         './assets/img/4_enemie_boss_chicken/2_alert/G12.png',
     ];
-
     IMAGES_WALKING = [
         './assets/img/4_enemie_boss_chicken/1_walk/G1.png',
         './assets/img/4_enemie_boss_chicken/1_walk/G2.png',
         './assets/img/4_enemie_boss_chicken/1_walk/G3.png',
         './assets/img/4_enemie_boss_chicken/1_walk/G4.png',
     ];
-
     IMAGES_ATTACK = [
         './assets/img/4_enemie_boss_chicken/3_attack/G13.png',
         './assets/img/4_enemie_boss_chicken/3_attack/G14.png',
@@ -32,18 +29,17 @@ class Endboss extends MoveableObject {
         './assets/img/4_enemie_boss_chicken/3_attack/G19.png',
         './assets/img/4_enemie_boss_chicken/3_attack/G20.png',
     ];
-
     IMAGES_HURT = [
         './assets/img/4_enemie_boss_chicken/4_hurt/G21.png',
         './assets/img/4_enemie_boss_chicken/4_hurt/G22.png',
         './assets/img/4_enemie_boss_chicken/4_hurt/G23.png',
     ];
-
     IMAGES_DEAD = [
         './assets/img/4_enemie_boss_chicken/5_dead/G24.png',
         './assets/img/4_enemie_boss_chicken/5_dead/G25.png',
         './assets/img/4_enemie_boss_chicken/5_dead/G26.png',
     ];
+
 
     isAlerted = false;
     isAttacking = false;
@@ -51,6 +47,7 @@ class Endboss extends MoveableObject {
     isWalking = false;
     hasStartedMoving = false;
 
+    
     constructor() {
         super().loadImage('./assets/img/4_enemie_boss_chicken/2_alert/G5.png');
         this.loadImages(this.IMAGES_ALERT);
@@ -67,6 +64,7 @@ class Endboss extends MoveableObject {
         this.setRedFrameOffset(50, 10, 10, 25);
     }
 
+
     animate() {
         setInterval(() => {
             if (this.isAttacking) {
@@ -79,6 +77,7 @@ class Endboss extends MoveableObject {
         }, 150);
     }
 
+
     startMovingLeft() {
         this.isAlerted = true;
         this.intervals.push(setTimeout(() => {
@@ -88,50 +87,51 @@ class Endboss extends MoveableObject {
         }, 1000));
     }
 
+
     clearIntervals() {
         this.intervals.forEach(clearInterval);
         this.intervals = [];
     }
+
 
     checkCollisionWithCharacter(character) {
         if (this.isColliding(character)) {
             this.isAttacking = true;
             setTimeout(() => {
                 this.isAttacking = false;
-            }, this.IMAGES_ATTACK.length * 100);  // Attacke dauert so lange wie die Animation, schnellerer Takt (100ms)
+            }, this.IMAGES_ATTACK.length * 100);
         }
     }
 
+
     takeHit() {
         if (this.isHurt || !this.hasStartedMoving) 
-            return; // Treffer ignorieren, wenn der Endboss bereits in Hurt-Animation ist oder noch nicht läuft
-    
-        this.life -= 20;  // Reduziert die Lebenspunkte um 20 pro Treffer
+            return;
+        this.life -= 20;
     
         if (this.life <= 19 && this.life > 0) {
-            this.isHurt = false;  // Setze Hurt-Zustand zurück, um zu verhindern, dass die Hurt-Animation angezeigt wird
-            this.stopWalking();  // Deaktiviert das Gehen
-            this.playDeadAnimation();  // Spiele die langsame Todesanimation ab
+            this.isHurt = false;
+            this.stopWalking();
+            this.playDeadAnimation();
         } else if (this.life >= 20) {
-            this.isHurt = true;  // Setze Hurt-Zustand
-            this.stopWalking();  // Deaktiviert das Gehen
-            this.playHurtAnimation();  // Spiele die Hurt-Animation ab
+            this.isHurt = true;
+            this.stopWalking();
+            this.playHurtAnimation();
     
             setTimeout(() => {
-                this.isHurt = false;  // Setze Hurt-Zustand zurück, um erneut getroffen werden zu können
-                this.startWalking();  // Reaktiviert das Gehen nach der Hurt-Animation
-            }, this.IMAGES_HURT.length * 150);  // Länge der Hurt-Animation: 3 Bilder * 150ms
+                this.isHurt = false;
+                this.startWalking();
+            }, this.IMAGES_HURT.length * 150);
         }
-    
         this.world.statusBar.updateEndbossLife(this.life);
     
         if (this.life <= 0) {
-            this.stopWalking();  // Deaktiviert das Gehen
-            this.playDeadAnimation();  // Langsame Todesanimation abspielen, wenn das Leben auf 0 fällt
-            // removeEndboss wird nun in der playDeadAnimation aufgerufen
+            this.stopWalking();
+            this.playDeadAnimation();
         }
     }
     
+
     playHurtAnimation() {
         let currentImageIndex = 0;
         const hurtInterval = setInterval(() => {
@@ -141,9 +141,10 @@ class Endboss extends MoveableObject {
             } else {
                 clearInterval(hurtInterval);
             }
-        }, 150);  // Verlangsamt die Animation auf 150ms pro Frame
+        }, 150);
     }
     
+
     playDeadAnimation() {
         let currentImageIndex = 0;
         const interval = setInterval(() => {
@@ -152,37 +153,38 @@ class Endboss extends MoveableObject {
                 currentImageIndex++;
             } else {
                 clearInterval(interval);
-                this.world.endbossDefeated = true;  // Endboss-Todstatus setzen
+                this.world.endbossDefeated = true;
                 
-                // Verzögerung hinzufügen, bevor der Endboss entfernt wird
                 setTimeout(() => {
                     this.removeEndboss();
                 }, 120);
             }
-        }, 200); // Animationstempo auf 200 ms pro Bild
+        }, 200);
     }
 
+
     stopWalking() {
-        this.isWalking = false;  // Setzt den Walking-Zustand auf false
+        this.isWalking = false;
     }
+
 
     startWalking() {
         if (this.hasStartedMoving && !this.isHurt) {
-            this.isWalking = true;  // Reaktiviert das Gehen, wenn die Hurt-Animation beendet ist
+            this.isWalking = true;
         }
     }
 
+
     removeEndboss() {
-        console.log('Endboss besiegt und entfernt');
         this.clearIntervals();
         this.world.level.enemies = this.world.level.enemies.filter(e => e !== this);
         
-        // 2 Sekunden Verzögerung hinzufügen, bevor das Spiel gestoppt und die Win-Musik abgespielt wird
         setTimeout(() => {
             this.world.stopGame();
             this.world.audioManager.playWinMusic();
-        }, 400); // 2000 ms = 2 Sekunden
+        }, 400);
     }
+
 
     checkCollisionWithBottle(bottle) {
         if (this.isColliding(bottle)) {

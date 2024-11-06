@@ -7,6 +7,7 @@ class Coin extends MoveableObject {
         './assets/img/8_coin/coin_2.png'
     ];
 
+
     constructor(x, y) {
         super().loadImage('./assets/img/8_coin/coin_1.png');
         this.loadImages(this.IMAGES_MOVING);
@@ -16,18 +17,18 @@ class Coin extends MoveableObject {
         this.setRedFrameOffset(20, 20, 20, 20);
     }
 
+
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGES_MOVING);
         }, 200);
     }
 
+
     static createCoinArc(startX, startY, arcHeight, arcWidth) {
         let coins = [];
-        let numCoins = Coin.getRandomInt(3, 6); // Zufällige Anzahl der Münzen zwischen 3 und 6
-    
-        // Anpassung der Bogenbreite basierend auf der Anzahl der Münzen
-        let adjustedArcWidth = arcWidth + (numCoins - 3) * 50; // Mehr Münzen -> breiterer Bogen
+        let numCoins = Coin.getRandomInt(3, 6);
+        let adjustedArcWidth = arcWidth + (numCoins - 3) * 50;
     
         for (let i = 0; i < numCoins; i++) {
             let x = startX + (i * (adjustedArcWidth / (numCoins - 1)));
@@ -39,16 +40,18 @@ class Coin extends MoveableObject {
         return coins;
     }
 
+
     static createCoinLine(startX, startY, numCoins) {
         let coins = [];
         for (let i = 0; i < numCoins; i++) {
-            let y = startY - i * 40; // Abstand zwischen den Münzen, kann angepasst werden
+            let y = startY - i * 40;
             let coin = new Coin(startX, y);
             coins.push(coin);
         }
         return coins;
     }
 
+    
     static getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }

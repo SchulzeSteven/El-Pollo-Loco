@@ -7,6 +7,7 @@ class Bottle extends MoveableObject {
         './assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png'
     ];
     
+    
     static lastX = 0;
     static minSpacing = 200;
 

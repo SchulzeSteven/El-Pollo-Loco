@@ -10,7 +10,6 @@ class Character extends MoveableObject {
         './assets/img/2_character_pepe/2_walk/W-25.png',
         './assets/img/2_character_pepe/2_walk/W-26.png'
     ];
-
     IMAGES_JUMPING = [
         './assets/img/2_character_pepe/3_jump/J-31.png',
         './assets/img/2_character_pepe/3_jump/J-32.png',
@@ -22,7 +21,6 @@ class Character extends MoveableObject {
         './assets/img/2_character_pepe/3_jump/J-38.png',
         './assets/img/2_character_pepe/3_jump/J-39.png'
     ];
-
     IMAGES_IDLE = [
         './assets/img/2_character_pepe/1_idle/idle/I-1.png',
         './assets/img/2_character_pepe/1_idle/idle/I-2.png',
@@ -35,7 +33,6 @@ class Character extends MoveableObject {
         './assets/img/2_character_pepe/1_idle/idle/I-9.png',
         './assets/img/2_character_pepe/1_idle/idle/I-10.png'
     ];
-
     IMAGES_IDLE_LONG = [
         './assets/img/2_character_pepe/1_idle/long_idle/I-11.png',
         './assets/img/2_character_pepe/1_idle/long_idle/I-12.png',
@@ -48,13 +45,11 @@ class Character extends MoveableObject {
         './assets/img/2_character_pepe/1_idle/long_idle/I-19.png',
         './assets/img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
-
     IMAGES_HURT = [
         './assets/img/2_character_pepe/4_hurt/H-41.png',
         './assets/img/2_character_pepe/4_hurt/H-42.png',
         './assets/img/2_character_pepe/4_hurt/H-43.png'
     ];
-
     IMAGES_DEAD = [
         './assets/img/2_character_pepe/5_dead/D-51.png',
         './assets/img/2_character_pepe/5_dead/D-52.png',
@@ -64,6 +59,7 @@ class Character extends MoveableObject {
         './assets/img/2_character_pepe/5_dead/D-56.png',
         './assets/img/2_character_pepe/5_dead/D-57.png'
     ];
+
 
     world;
     audioManager;
@@ -79,6 +75,7 @@ class Character extends MoveableObject {
     lastBounceTime = 0;
     bounceCooldown = 250;
     intervals = [];
+
 
     constructor(audioManager) {
         super().loadImage('./assets/img/2_character_pepe/2_walk/W-21.png');
@@ -97,38 +94,32 @@ class Character extends MoveableObject {
 
 
     checkCollisionsWithChickens(chickens) {
-        // Keine Kollisionsprüfung, wenn der Charakter tot ist
         if (this.isDead() || this.world.endbossDefeated) {
             return;
         }
-    
         let currentTime = new Date().getTime();
     
         if (currentTime - this.lastBounceTime < this.bounceCooldown) {
-            return; // Wenn der letzte Bounce zu kürzlich war, keine weitere Kollision
+            return;
         }
-    
         let chickenHit = false;
     
         for (let chicken of chickens) {
-            // Prüft, ob der Charakter wirklich von oben auf den Gegner fällt
             if (this.isCollidingTop(chicken) && this.speedY < 0 && !chickenHit) {
-                this.bounceOff(); // Der Charakter springt zurück, wenn er von oben auf das Huhn springt
-                chicken.takeHit(); // Das Huhn nimmt einen Treffer und wird eventuell entfernt
-                chickenHit = true; // Markiert, dass ein Huhn getroffen wurde
-                this.lastBounceTime = currentTime; // Aktualisiert die Zeit des letzten Bounces
-                break; // Beendet die Schleife, sodass nur ein Huhn getroffen wird
+                this.bounceOff();
+                chicken.takeHit();
+                chickenHit = true;
+                this.lastBounceTime = currentTime;
+                break;
             } 
-            // Verhindert Schaden für das Huhn bei seitlicher Kollision
             else if (this.isColliding(chicken) && !this.isHurt() && !chickenHit) {
-                this.hit(chicken); // Normale Kollision, aber kein Tod für das Huhn bei seitlicher Kollision
+                this.hit(chicken);
             }
         }
     }
     
 
     animate() {
-        // Erstellen und Speichern aller Intervalle im Array
         this.intervals.push(setInterval(() => {
             if (this.isDead() || this.world.gameStopped) {
                 this.audioManager.pause('walking');
@@ -197,11 +188,10 @@ class Character extends MoveableObject {
                 return;
             }
     
-            // Leerlauf-Check: Schnarchgeräusch nur abspielen, wenn der Charakter lange im Leerlauf ist
             if (!this.world.gameStopped && !this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
                 if (this.isLongIdle) {
                     this.playAnimation(this.IMAGES_IDLE_LONG);
-                    this.audioManager.play('snoring');  // Schnarchgeräusch starten
+                    this.audioManager.play('snoring');
                 } else if (this.isIdle) {
                     this.playAnimation(this.IMAGES_IDLE);
                 } else {
@@ -209,14 +199,14 @@ class Character extends MoveableObject {
                     this.audioManager.pause('snoring');
                 }
             } else {
-                // Schnarchgeräusch pausieren, wenn der Charakter sich bewegt oder springt
                 this.audioManager.pause('snoring');
             }
         }, 200);
     }
 
+
     clearIntervals() {
-        this.intervals.forEach(interval => clearInterval(interval)); // Löscht alle in `this.intervals` gespeicherten Intervalle
+        this.intervals.forEach(interval => clearInterval(interval));
         clearTimeout(this.idleTimeout);
         clearTimeout(this.longIdleTimeout);
     
@@ -227,9 +217,10 @@ class Character extends MoveableObject {
         this.deadAnimationCompleted = false;
     }
 
+
     playDeadAnimationOnce() {
-        if (this.animationStarted) return;  // Verhindert mehrmaliges Aufrufen
-        this.animationStarted = true;       // Setzt das Flag auf true
+        if (this.animationStarted) return;
+        this.animationStarted = true;
         let currentImageIndex = 0;
         const interval = setInterval(() => {
             if (currentImageIndex < this.IMAGES_DEAD.length) {
@@ -237,19 +228,21 @@ class Character extends MoveableObject {
                 currentImageIndex++;
             } else {
                 clearInterval(interval);
-                this.deadAnimationCompleted = true;  // Setzt das Flag, wenn die Animation beendet ist
+                this.deadAnimationCompleted = true;
             }
-        }, 150);  // Geschwindigkeit der Animation in ms
+        }, 150);
     }
+
 
     isDeadAnimationCompleted() {
         return this.deadAnimationCompleted;
     }
 
-    // Bestehende isDead-Methode, um zu prüfen, ob der Charakter tot ist
+
     isDead() {
         return this.life <= 0;
     }
+
 
     setIdleTimers() {
         this.idleTimeout = setTimeout(() => {
@@ -260,6 +253,7 @@ class Character extends MoveableObject {
         }, 3000);
     }
 
+
     resetIdleTimers() {
         clearTimeout(this.idleTimeout);
         clearTimeout(this.longIdleTimeout);
@@ -268,14 +262,15 @@ class Character extends MoveableObject {
         this.setIdleTimers();
     }
 
+
     hit(enemy) {
         const damage = this.calculateDamage(enemy);
         this.applyDamage(damage);
         this.audioManager.play('hurting');
-        console.log(`Character hit by ${enemy.constructor.name}, received ${damage} damage. Remaining life: ${this.life}`);
-        this.lastHit = new Date().getTime(); // Zeitpunkt des letzten Treffers aktualisieren
-        this.world.statusBar.setPercentage(this.life); // Aktualisiert die Lebensleiste
+        this.lastHit = new Date().getTime();
+        this.world.statusBar.setPercentage(this.life);
     }
+
 
     isHurt() {
         // Überprüfen, ob die Hurt-Animation noch aktiv ist
@@ -283,7 +278,8 @@ class Character extends MoveableObject {
         return timepassed < this.getHurtDuration();
     }
 
+
     getHurtDuration() {
-        return this.IMAGES_HURT.length * 350; // Dauer der Hurt-Animation in Millisekunden (100ms pro Bild)
+        return this.IMAGES_HURT.length * 350;
     }
 }

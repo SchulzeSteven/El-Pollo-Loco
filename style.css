@@ -11,10 +11,10 @@ body {
     margin: 0;
     font-family: 'zabars', Arial, Helvetica, sans-serif;
     background-image: url('./assets/img/5_background/bg.png');
-    background-repeat: no-repeat; /* Verhindert das Wiederholen des Hintergrundbildes */
-    background-size: cover; /* Sorgt dafür, dass das Hintergrundbild den gesamten sichtbaren Bereich abdeckt */
-    background-attachment: fixed; /* Fixiert das Hintergrundbild, damit es nicht scrollt */
-    background-position: center; /* Zentriert das Hintergrundbild */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
 h1 {
@@ -293,7 +293,6 @@ canvas {
     }
 
     .startbtn-container {
-        /* gap: 10px; */
         justify-content: center;
         position: absolute;
         left: 50%;
