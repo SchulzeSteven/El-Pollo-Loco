@@ -93,6 +93,17 @@ class Character extends MoveableObject {
     }
 
 
+    /**
+    * Checks for collisions with chicken objects and determines the appropriate action based on the
+    * type of collision. If the character collides with the top of a chicken while falling, it bounces
+    * off and damages the chicken. If it collides from the side and isn't already hurt, the character
+    * takes damage from the chicken.
+    *
+    * @function checkCollisionsWithChickens
+    * @memberof Character
+    * @param {Chicken[]} chickens - Array of chicken objects to check for collisions.
+    * @description This function handles bounce or hit actions based on collision conditions and cooldowns.
+    */
     checkCollisionsWithChickens(chickens) {
         if (this.isDead() || this.world.endbossDefeated) {
             return;
@@ -119,6 +130,14 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Starts various intervals for animations, movements, and collision checks.
+    * This function is critical for enabling continuous character behavior and interaction with the game world.
+    *
+    * @function animate
+    * @memberof Character
+    * @description Sets up intervals for different character actions, such as movement, jumping, idle animations, and collision detection.
+    */
     animate() {
         this.intervals.push(this.createMovementInterval());
         this.intervals.push(this.createCollisionCheckInterval());
@@ -127,6 +146,15 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Creates an interval for handling the character's movement, managing both walking and jumping
+    * based on current keyboard input. This function also updates the camera position relative to
+    * the character.
+    *
+    * @function createMovementInterval
+    * @memberof Character
+    * @returns {number} Interval ID for the movement process.
+    */
     createMovementInterval() {
         return setInterval(() => {
             if (this.shouldStopAnimation()) return;
@@ -138,6 +166,14 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Creates an interval to check for collisions specifically with chicken objects.
+    * This frequent collision checking ensures responsive interactions with enemies.
+     *
+     * @function createCollisionCheckInterval
+    * @memberof Character
+    * @returns {number} Interval ID for chicken collision checking.
+    */
     createCollisionCheckInterval() {
         return setInterval(() => {
             const chickens = this.world.level.enemies.filter(enemy => enemy instanceof Chicken_Normal || enemy instanceof Chicken_Small);
@@ -146,6 +182,14 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Sets up an interval for managing character animations, specifically for jumping, walking,
+    * and handling the character's death. This allows the character’s actions to be visualized smoothly.
+    *
+    * @function createJumpAndWalkAnimationInterval
+    * @memberof Character
+    * @returns {number} Interval ID for jump and walk animations.
+    */
     createJumpAndWalkAnimationInterval() {
         return setInterval(() => {
             if (this.isDead()) {
@@ -161,6 +205,14 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Creates an interval for managing idle animations. Plays idle animations when the character is
+    * not moving or performing other actions, giving a realistic idle behavior.
+    *
+    * @function createIdleAnimationInterval
+    * @memberof Character
+    * @returns {number} Interval ID for idle animations.
+    */
     createIdleAnimationInterval() {
         return setInterval(() => {
             if (this.isDead()) {
@@ -176,6 +228,14 @@ class Character extends MoveableObject {
     }
     
     
+    /**
+    * Determines if character animations should stop based on the game or character state,
+    * such as when the character is dead or the game has been paused/stopped.
+    *
+    * @function shouldStopAnimation
+    * @memberof Character
+    * @returns {boolean} True if animations should stop, false otherwise.
+    */
     shouldStopAnimation() {
         if (this.isDead() || this.world.gameStopped) {
             this.audioManager.pause('walking');
@@ -188,6 +248,13 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Handles the walking logic for the character based on keyboard inputs, managing direction and 
+    * playing walking sounds. Adjusts the direction the character is facing based on movement.
+    *
+    * @function handleWalking
+    * @memberof Character
+    */
     handleWalking() {
         this.audioManager.pause('walking');
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
@@ -205,6 +272,13 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Manages the jumping logic for the character, activating jump when the space key is pressed
+    * and playing the appropriate sound. Resets idle timers to prevent idle animations during jumps.
+    *
+    * @function handleJumping
+    * @memberof Character
+    */
     handleJumping() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
@@ -214,11 +288,26 @@ class Character extends MoveableObject {
         }
     }
     
+
+    /**
+    * Updates the camera position to keep the character centered in the viewport. Ensures smooth
+    * gameplay experience by adjusting the camera view as the character moves.
+    *
+    * @function updateCamera
+    * @memberof Character
+    */
     updateCamera() {
         this.world.camera_x = -this.x + 100;
     }
     
 
+    /**
+    * Plays the walking sound if the character is on the ground, providing audio feedback to the
+    * player that the character is moving.
+    *  
+    * @function playWalkingSound
+    * @memberof Character
+ */
     playWalkingSound() {
         if (!this.isAboveGround()) {
             this.audioManager.play('walking');
@@ -227,6 +316,13 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Plays the hurt animation and stops idle sounds when the character is damaged by an enemy.
+    * Provides visual feedback to indicate the character is in a hurt state.
+    *
+    * @function playHurtAnimation
+    * @memberof Character
+    */
     playHurtAnimation() {
         this.playAnimation(this.IMAGES_HURT);
         this.resetIdleTimers();
@@ -234,11 +330,26 @@ class Character extends MoveableObject {
     }
     
 
+    /**
+    * Checks if the idle animation should play by assessing if the character is above ground,
+    * actively moving, or if the game is stopped. Only plays idle animation if conditions are met.
+    *
+    * @function shouldPlayIdleAnimation
+    * @memberof Character
+    * @returns {boolean} True if idle animation should play.
+    */
     shouldPlayIdleAnimation() {
         return !this.world.gameStopped && !this.isAboveGround() && !this.world.keyboard.RIGHT && !this.world.keyboard.LEFT;
     }
     
 
+    /**
+    * Plays the idle animation based on the character's idle state (e.g., normal idle or long idle).
+    * Different animations are shown depending on how long the character has been idle.
+    *
+    * @function playIdleAnimation
+    * @memberof Character
+    */
     playIdleAnimation() {
         if (this.isLongIdle) {
             this.playAnimation(this.IMAGES_IDLE_LONG);
@@ -252,6 +363,13 @@ class Character extends MoveableObject {
     }
     
     
+    /**
+    * Clears all active intervals related to the character, including movement, animation, and idle
+    * intervals. Resets idle and animation states to ensure a clean character state.
+    *
+    * @function clearIntervals
+    * @memberof Character
+    */
     clearIntervals() {
         this.intervals.forEach(interval => clearInterval(interval));
         clearTimeout(this.idleTimeout);
@@ -265,6 +383,13 @@ class Character extends MoveableObject {
     }
 
 
+    /**
+    * Plays the character's death animation once by cycling through death images.
+    * Marks the animation as completed once all frames are shown.
+    *
+    * @function playDeadAnimationOnce
+    * @memberof Character
+    */
     playDeadAnimationOnce() {
         if (this.animationStarted) return;
         this.animationStarted = true;
@@ -281,16 +406,40 @@ class Character extends MoveableObject {
     }
 
 
+    /**
+    * Checks if the character's death animation has finished, useful for determining if the character
+    * can be removed from the screen or if other end-of-game actions should occur.
+    *
+    * @function isDeadAnimationCompleted
+    * @memberof Character
+    * @returns {boolean} True if the death animation has completed.
+    */
     isDeadAnimationCompleted() {
         return this.deadAnimationCompleted;
     }
 
 
+    /**
+    * Checks if the character is dead based on its life value. Returns true if life is zero or below,
+    * indicating that the character should no longer respond to controls.
+    *
+    * @function isDead
+    * @memberof Character
+    * @returns {boolean} True if the character's life is zero or less.
+    */
     isDead() {
         return this.life <= 0;
     }
 
 
+    /**
+    * Sets timers to manage idle and long-idle states, providing a realistic idle behavior
+    * when the character has not moved for a period of time. Long-idle animations start after
+    * an additional delay if the character remains idle.
+    *
+    * @function setIdleTimers
+    * @memberof Character
+    */
     setIdleTimers() {
         this.idleTimeout = setTimeout(() => {
             this.isIdle = true;
@@ -301,6 +450,13 @@ class Character extends MoveableObject {
     }
 
 
+    /**
+    * Resets idle timers and state, ensuring the character starts a fresh idle countdown when
+    * returning to a neutral state after movement or action.
+    *
+    * @function resetIdleTimers
+    * @memberof Character
+    */
     resetIdleTimers() {
         clearTimeout(this.idleTimeout);
         clearTimeout(this.longIdleTimeout);
@@ -310,6 +466,14 @@ class Character extends MoveableObject {
     }
 
 
+    /**
+    * Handles the character taking damage from an enemy, calculates and applies the damage,
+    * plays the hurt sound, and updates the life status in the UI.
+    *
+    * @function hit
+    * @memberof Character
+    * @param {Object} enemy - The enemy that hit the character.
+    */
     hit(enemy) {
         const damage = this.calculateDamage(enemy);
         this.applyDamage(damage);
@@ -319,12 +483,28 @@ class Character extends MoveableObject {
     }
 
 
+    /**
+    * Checks if the character is currently in a hurt state by comparing the time since the last hit.
+    * If the character was hit recently, it remains in the hurt state.
+    *
+    * @function isHurt
+    * @memberof Character
+    * @returns {boolean} True if character is in a hurt state.
+    */
     isHurt() {
         let timepassed = new Date().getTime() - this.lastHit;
         return timepassed < this.getHurtDuration();
     }
 
 
+    /**
+    * Calculates the duration the character remains in a hurt state, based on the length of
+    * the hurt animation sequence. This duration determines when the character can take damage again.
+    *
+    * @function getHurtDuration
+    * @memberof Character
+    * @returns {number} Duration in milliseconds for the hurt state.
+    */
     getHurtDuration() {
         return this.IMAGES_HURT.length * 350;
     }

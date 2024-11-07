@@ -14,6 +14,15 @@ class Level {
         this.clouds = clouds;
         this.backgroundObjects = backgroundObjects;
  
+
+        /**
+        * Generates a random integer between a specified minimum and maximum.
+        *
+        * @function getRandomInt
+        * @param {number} min - The minimum value (inclusive).
+        * @param {number} max - The maximum value (inclusive).
+        * @returns {number} A random integer between min and max.
+        */
         function getRandomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }

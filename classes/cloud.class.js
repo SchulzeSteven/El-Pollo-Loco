@@ -10,6 +10,13 @@ class Cloud extends MoveableObject {
     }
 
 
+    /**
+    * Animates the object by moving it to the left.
+    *
+    * @function animate
+    * @memberof ObjectName
+    * @description Initiates a leftward movement for the object.
+    */
     animate() {
         this.moveLeft();
     }
