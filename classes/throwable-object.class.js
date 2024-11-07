@@ -89,19 +89,53 @@ class ThrowableObject extends MoveableObject {
     
 
     /**
-    * Checks for collisions with chicken enemies, causing damage and removing the object if a collision occurs.
+    * Checks for collisions with enemies in the game, specifically chickens and the endboss.
+    * Triggers different actions based on the type of enemy collided with.
     */
     checkCollisionWithChickens() {
         for (let enemy of this.world.level.enemies) {
             if (enemy instanceof Chicken_Normal && enemy.isColliding(this)) {
-                enemy.takeHit();
-                this.remove();
-                clearInterval(this.moveInterval);
+                this.handleChickenCollision(enemy);
+                break;
+            } else if (enemy instanceof Endboss && enemy.isColliding(this)) {
+                this.handleEndbossCollision(enemy);
                 break;
             }
         }
     }
 
+
+    /**
+    * Handles the collision with a chicken by damaging the chicken, removing the character,
+    * and stopping its movement.
+    */
+    handleChickenCollision(chicken) {
+        chicken.takeHit();
+        this.remove();
+        clearInterval(this.moveInterval);
+    }
+    
+
+    /**
+    * Handles the collision with the endboss, applying damage and removing the character
+    * based on the endboss's remaining life.
+    */
+    handleEndbossCollision(endboss) {
+        if (!this.world.endbossDefeated && endboss.life > 20) {
+            endboss.takeHit();
+            this.playAnimation(this.IMAGES_SPLASH);
+            setTimeout(() => {
+                if (this.world && this.world.throwableObjects.includes(this)) {
+                    this.remove();
+                }
+            }, 50);
+        } else if (endboss.life <= 20) {
+            endboss.takeHit();
+            this.remove();
+        }
+        clearInterval(this.moveInterval);
+    }
+    
 
     /**
     * Handles the object's behavior when it hits the ground, stopping animation and playing splash effect.
