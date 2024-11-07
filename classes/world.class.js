@@ -163,11 +163,11 @@ class World {
 
     checkGameEnd() {
         if (this.character.isDead()) {
-            this.stopGame();
+            stopGame();
             this.endScreen.drawEndScreen(this.ctx, false);
             document.getElementById("mobile-movement-container").style.display = "none";
         } else if (this.endbossDefeated) {
-            this.stopGame();
+            stopGame();
             this.endScreen.drawEndScreen(this.ctx, true);
             document.getElementById("mobile-movement-container").style.display = "none";
         }
@@ -291,32 +291,11 @@ class World {
             this.character.playDeadAnimationOnce();
             if (this.character.isDeadAnimationCompleted()) {
                 this.audioManager.playGameOverMusic();
-                this.stopGame();
+                stopGame();
                 return true;
             }
         }
         return false;
-    }
-
-
-    stopGame() {
-        this.gameStopped = true;
-        cancelAnimationFrame(this.animationFrameId);
-    
-        if (this.collisionInterval) {
-            clearInterval(this.collisionInterval);
-            this.collisionInterval = null;
-        }
-         if (this.endbossMovementInterval) {
-            clearInterval(this.endbossMovementInterval);
-            this.endbossMovementInterval = null;
-        }
-        this.level.enemies.forEach(enemy => {
-            if (enemy.clearIntervals) {
-                enemy.clearIntervals();
-            }
-        });
-        this.throwableObjects = [];
     }
     
 

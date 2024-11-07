@@ -41,10 +41,37 @@ function hideStartScreen() {
     document.getElementById('canvas').style.display = 'block';
 }
 
+function stopGame() {
+    if (!world) return;
+
+    world.gameStopped = true;
+    cancelAnimationFrame(world.animationFrameId);
+
+    // Stoppe Kollisionsintervalle und Endboss-Bewegungen
+    if (world.collisionInterval) {
+        clearInterval(world.collisionInterval);
+        world.collisionInterval = null;
+    }
+    if (world.endbossMovementInterval) {
+        clearInterval(world.endbossMovementInterval);
+        world.endbossMovementInterval = null;
+    }
+
+    // Stoppe alle Intervalle der Gegner
+    world.level.enemies.forEach(enemy => {
+        if (enemy.clearIntervals) {
+            enemy.clearIntervals();
+        }
+    });
+
+    // Leere die geworfenen Objekte
+    world.throwableObjects = [];
+}
+
 
 function resetWorldState() {
     if (world) {
-        world.stopGame();
+        stopGame();
         world.character.clearIntervals();
         world.level.enemies.forEach(enemy => {
             if (enemy.clearIntervals) {
@@ -106,7 +133,7 @@ function home() {
     document.querySelector('.btn-container').style.display = 'none';
     document.getElementById('impressum').style.display = 'none';
     if (world) {
-        world.stopGame();
+        stopGame();
         world = null;
     }
 }
@@ -122,7 +149,7 @@ function impressum() {
 
 function stopMobileMovement(KEY) {
     if (KEY === 'THROW') {
-        keyboard.D = false; // Setzt D auf false, wenn "THROW" losgelassen wird
+        keyboard.D = false;
     } else if (keyboard[KEY] !== undefined) {
         keyboard[KEY] = false;
     }
@@ -131,7 +158,7 @@ function stopMobileMovement(KEY) {
 
 function startMobileMovement(KEY) {
     if (KEY === 'THROW') {
-        keyboard.D = true; // Setzt D auf true, wenn "THROW" gedrückt wird
+        keyboard.D = true;
     } else if (keyboard[KEY] !== undefined) {
         keyboard[KEY] = true;
     }
