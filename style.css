@@ -251,7 +251,7 @@ canvas {
 }
 
 
-  @media (max-width: 950px) and (orientation: portrait) {
+  @media (max-width: 1024px) and (orientation: portrait) {
     #orientation-warning {
         display: flex !important;
     }
@@ -355,8 +355,41 @@ canvas {
 
     .mobile-movement-container {
         position: absolute;
+        bottom: 7%;
+    }
+  }
+
+  @media only screen and (max-height: 400px) {
+    .mobile-movement-container {
+        position: absolute;
         bottom: 2%;
     }
   }
 
+  @media only screen and (min-device-width: 1366px) and (max-device-width: 1366px) and (orientation: landscape) {
+    .main {
+        height: 90vh;
+    }
 
+    h1 {
+        display: none;
+    }
+    .mobile-movement-container {
+        gap: 205px;
+        bottom: 32%;
+    }
+}
+
+@media only screen and (min-device-width: 1180px) and (max-device-width: 1180px) and (orientation: landscape) {
+    .mobile-movement-container {
+        gap: 170px;
+        bottom: 28%;
+    }
+}
+
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .mobile-movement-container {
+        gap: 170px;
+        bottom: 27%;
+    }
+}

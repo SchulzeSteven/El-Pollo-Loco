@@ -20,6 +20,9 @@ function init() {
         event.preventDefault();
         if (world) world.toggleMute();
     });
+    if (audioManager.isMuted) {
+        muteButton.src = './assets/img/icons/volume-off.png';
+    }
 }
 
 
@@ -138,24 +141,25 @@ function updateControlsVisibility() {
 
 
 /**
- * Manages the visibility of desktop controls. Hides them on smaller screens and displays them
- * on larger screens to ensure the game controls fit properly on different device types.
+ * Updates the visibility of desktop controls based on screen width and device type.
+ * Hides controls if the screen width is less than 950px or if the device is detected as an iPad.
  */
 function updateDesktopControlsVisibility() {
     const controls = document.querySelector('.controls');
-    controls.style.display = window.innerWidth < 950 ? 'none' : 'flex';
+    const isiPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+    controls.style.display = (window.innerWidth < 950 || isiPad) ? 'none' : 'flex';
 }
 
 
 /**
- * Updates the visibility of mobile control elements, such as movement controls and the mute button,
- * based on the game state and screen size. Displays them on mobile screens if the game is active.
+ * Updates the visibility of mobile controls and the mute button based on game state, screen width,
+ * and device type. Displays mobile controls if the game is active and the device is mobile-sized or an iPad.
  */
 function updateMobileControlsVisibility() {
     const mobileMovementContainer = document.getElementById("mobile-movement-container");
     const muteButton = document.getElementById("mute-button");
-
-    if (world && !world.gameStopped && window.innerWidth < 950) {
+    const isiPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+    if (world && !world.gameStopped && (window.innerWidth < 950 || isiPad)) {
         mobileMovementContainer.style.display = 'flex';
         muteButton.style.display = 'flex';
     } else {

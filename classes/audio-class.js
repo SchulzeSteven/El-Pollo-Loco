@@ -12,11 +12,9 @@ class AudioManager {
             chickenSmallHit: new Audio('./audio/chickenSmall.mp3'),
             chickenBigHit: new Audio('./audio/chicken_big.mp3'),
         };
-
-
-        this.sounds.background.volume = 0.2;
+        this.isMuted = sessionStorage.getItem('isMuted') === 'true';
         this.sounds.throwing.volume = 0.2;
-        this.isMuted = false;  
+        this.applyMuteStatus();
         this.world = null;
         this.setGlobalVolume(1);
         this.setupMuteToggle();
@@ -28,6 +26,17 @@ class AudioManager {
     */
     setWorld(world) {
         this.world = world;
+    }
+
+
+    /**
+    * Applies the current mute status to all sounds in the game.
+    * Sets each sound's `muted` property based on the `isMuted` status.
+    */
+    applyMuteStatus() {
+        Object.values(this.sounds).forEach(sound => {
+            sound.muted = this.isMuted;
+        });
     }
 
 
@@ -142,16 +151,12 @@ class AudioManager {
 
 
     /**
-    * Toggles mute for all sounds.
-    * Mutes or unmutes all sounds, resuming playback if unmuted and not paused.
+    * Toggles the mute status of all sounds in the game.
+    * Updates the `isMuted` status, saves it to session storage, and applies the new mute state.
     */
     toggleMute() {
         this.isMuted = !this.isMuted;
-        Object.values(this.sounds).forEach(sound => {
-            sound.muted = this.isMuted;
-            if (!this.isMuted && !sound.paused) {
-                sound.play();
-            }
-        });
+        sessionStorage.setItem('isMuted', this.isMuted); // Status in der aktuellen Sitzung speichern
+        this.applyMuteStatus();
     }
 }
