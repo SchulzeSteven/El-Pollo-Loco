@@ -9,12 +9,7 @@ class EndScreen extends DrawableObjekt {
 
     /**
     * Draws the end screen image based on the game result.
-    *
-    * @function drawEndScreen
-    * @memberof GameUI
-    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
-    * @param {boolean} hasWon - Determines if the win or game-over image should be displayed.
-    * @description Displays a win or game-over image, covering the entire canvas. Shows the button container after a delay.
+    * Displays a win or game-over image, covering the entire canvas. Shows the button container after a delay.
     */
     drawEndScreen(ctx, hasWon) {
         const imagePath = hasWon ? this.IMAGES_WIN[0] : this.IMAGES_GAMEOVER[0];

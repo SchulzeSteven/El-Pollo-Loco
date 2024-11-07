@@ -67,10 +67,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Animates the endboss based on its current state (attacking, alerted, or walking).
-    *
-    * @function animate
-    * @memberof Endboss
-    * @description Plays different animations based on the endboss's state every 150ms.
     */
     animate() {
         setInterval(() => {
@@ -87,10 +83,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Initiates movement to the left after a delay.
-    *
-    * @function startMovingLeft
-    * @memberof Endboss
-    * @description Sets the endboss as alerted, then starts walking left after a delay.
     */
     startMovingLeft() {
         this.isAlerted = true;
@@ -104,10 +96,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Clears all active intervals for the endboss.
-    *
-    * @function clearIntervals
-    * @memberof Endboss
-    * @description Stops and removes all intervals stored in the `this.intervals` array.
     */
     clearIntervals() {
         this.intervals.forEach(interval => clearInterval(interval));
@@ -117,11 +105,6 @@ class Endboss extends MoveableObject {
 
     /**
     *  Checks collision with a character and triggers an attack if colliding.
-    *
-    * @function checkCollisionWithCharacter
-    * @memberof Endboss
-    * @param {Object} character - The character object to check for collision.
-    * @description Sets the endboss to attacking state when colliding with the character.
     */
     checkCollisionWithCharacter(character) {
         if (this.isColliding(character)) {
@@ -135,10 +118,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Handles taking a hit, reducing life and managing hurt or death states.
-    *
-    * @function takeHit
-     @memberof Endboss
-    * @description Reduces life when hit, updates the status bar, and triggers hurt or death states.
     */
     takeHit() {
         if (this.shouldIgnoreHit()) return;
@@ -156,10 +135,6 @@ class Endboss extends MoveableObject {
     
     /**
     * Checks if the endboss should ignore the hit.
-    *
-    * @function shouldIgnoreHit
-    * @memberof Endboss
-    * @returns {boolean} True if endboss is in a hurt state or hasn't started moving.
     */
     shouldIgnoreHit() {
         return this.isHurt || !this.hasStartedMoving;
@@ -168,10 +143,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Reduces the life of the endboss.
-    *
-    * @function reduceLife
-    * @memberof Endboss
-    * @description Decreases the endboss's life by a fixed amount.
     */
     reduceLife() {
         this.life -= 20;
@@ -180,10 +151,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Checks if the endboss is still alive.
-    *
-    * @function isAlive
-    * @memberof Endboss
-    * @returns {boolean} True if life is greater than 0.
     */
     isAlive() {
         return this.life > 0;
@@ -192,10 +159,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Handles the hurt state of the endboss.
-    *
-    * @function handleHurtState
-    * @memberof Endboss
-    * @description Sets the endboss as hurt, stops movement, and plays the hurt animation.
     */
     handleHurtState() {
         this.isHurt = true;
@@ -211,10 +174,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Handles the death of the endboss.
-    *
-    * @function handleDeath
-    * @memberof Endboss
-    * @description Sets the endboss as dead, stops movement, and plays the death animation.
     */
     handleDeath() {
         this.isHurt = false;
@@ -225,10 +184,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Plays the hurt animation for the endboss.
-    *
-    * @function playHurtAnimation
-    * @memberof Endboss
-    * @description Cycles through hurt images, clearing interval when animation completes.
     */
     playHurtAnimation() {
         let currentImageIndex = 0;
@@ -245,10 +200,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Plays the death animation for the endboss.
-    *
-    * @function playDeadAnimation
-    * @memberof Endboss
-    * @description Cycles through death images, then removes the endboss and triggers win state.
     */
     playDeadAnimation() {
         let currentImageIndex = 0;
@@ -270,10 +221,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Stops the walking animation of the endboss.
-    *
-    * @function stopWalking
-    * @memberof Endboss
-    * @description Sets `isWalking` to false, stopping the walking animation.
     */
     stopWalking() {
         this.isWalking = false;
@@ -282,10 +229,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Starts the walking animation of the endboss if allowed.
-    *
-    * @function startWalking
-    * @memberof Endboss
-    * @description Sets `isWalking` to true if the endboss has started moving and is not hurt.
     */
     startWalking() {
         if (this.hasStartedMoving && !this.isHurt) {
@@ -296,10 +239,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Removes the endboss from the game world and triggers the win sequence.
-    *
-    * @function removeEndboss
-    * @memberof Endboss
-    * @description Clears intervals, removes the endboss from enemies, stops the game, and plays win music.
     */
     removeEndboss() {
         this.clearIntervals();
@@ -314,11 +253,6 @@ class Endboss extends MoveableObject {
 
     /**
     * Checks collision with a bottle and triggers a hit if colliding.
-    *
-    * @function checkCollisionWithBottle
-    * @memberof Endboss
-    * @param {Object} bottle - The bottle object to check for collision.
-    * @description If a collision is detected, the endboss takes a hit and the bottle is removed.
     */
     checkCollisionWithBottle(bottle) {
         if (this.isColliding(bottle)) {

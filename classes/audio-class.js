@@ -25,10 +25,6 @@ class AudioManager {
 
     /**
     * Sets the game world for this instance.
-    *
-    * @function setWorld
-    * @memberof AudioManager
-    * @param {Object} world - The game world object.
     */
     setWorld(world) {
         this.world = world;
@@ -37,10 +33,6 @@ class AudioManager {
 
     /**
     * Plays a specified sound.
-    *
-    * @function play
-    * @memberof AudioManager
-    * @param {string} soundName - The name of the sound to play.
     */
     play(soundName) {
         const sound = this.sounds[soundName];
@@ -52,10 +44,6 @@ class AudioManager {
 
     /**
     * Pauses a specified sound.
-    *
-    * @function pause
-    * @memberof AudioManager
-    * @param {string} soundName - The name of the sound to pause.
     */
     pause(soundName) {
         const sound = this.sounds[soundName];
@@ -67,9 +55,6 @@ class AudioManager {
 
     /**
     * Stops all sounds and resets their playback position.
-    *
-    * @function stopAndResetSounds
-    * @memberof AudioManager
     */
     stopAndResetSounds() {
         for (let soundName in this.sounds) {
@@ -82,9 +67,6 @@ class AudioManager {
 
     /**
     * Plays the game-over music and pauses the background music.
-    *
-    * @function playGameOverMusic
-    * @memberof AudioManager
     */
     playGameOverMusic() {
         this.pause('background');
@@ -94,9 +76,6 @@ class AudioManager {
 
     /**
     * Plays the win music with reduced volume and pauses the background music.
-    *
-    * @function playWinMusic
-    * @memberof AudioManager
     */
     playWinMusic() {
         this.pause('background');
@@ -107,11 +86,6 @@ class AudioManager {
 
     /**
     * Sets the volume of a specified sound.
-    *
-    * @function setVolume
-    * @memberof AudioManager
-    * @param {string} soundName - The name of the sound.
-    * @param {number} volume - The volume level (0 to 1).
     */
     setVolume(soundName, volume) {
         const sound = this.sounds[soundName];
@@ -123,9 +97,6 @@ class AudioManager {
 
     /**
     * Mutes all sounds.
-    *
-    * @function muteAll
-    * @memberof AudioManager
     */
     muteAll() {
         this.setGlobalVolume(0);
@@ -135,9 +106,6 @@ class AudioManager {
 
     /**
     * Unmutes all sounds, setting default volumes for background and throwing sounds.
-    *
-    * @function unmuteAll
-    * @memberof AudioManager
     */
     unmuteAll() {
         this.setGlobalVolume(1);
@@ -148,10 +116,6 @@ class AudioManager {
 
     /**
     * Sets the global volume for all sounds except the throwing sound.
-    *
-    * @function setGlobalVolume
-    * @memberof AudioManager
-    * @param {number} volume - The volume level (0 to 1).
     */
     setGlobalVolume(volume) {
         for (let sound in this.sounds) {
@@ -164,9 +128,6 @@ class AudioManager {
 
     /**
     * Sets up a key listener to toggle mute with the 'M' key.
-    *
-    * @function setupMuteToggle
-    * @memberof AudioManager
     */
     setupMuteToggle() {
         if (!this.muteToggleAdded) {
@@ -182,10 +143,7 @@ class AudioManager {
 
     /**
     * Toggles mute for all sounds.
-    *
-    * @function toggleMute
-    * @memberof AudioManager
-    * @description Mutes or unmutes all sounds, resuming playback if unmuted and not paused.
+    * Mutes or unmutes all sounds, resuming playback if unmuted and not paused.
     */
     toggleMute() {
         this.isMuted = !this.isMuted;

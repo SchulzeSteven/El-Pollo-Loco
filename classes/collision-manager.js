@@ -6,10 +6,7 @@ class CollisionManager {
 
     /**
     * Starts checking for collisions at regular intervals.
-    *
-    * @function startCollisionCheck
-    * @memberof CollisionManager
-    * @description Sets an interval to continuously check for various collisions every 250ms. Stops checking if the character is dead.
+    * Sets an interval to continuously check for various collisions every 250ms. Stops checking if the character is dead.
     */
     startCollisionCheck() {
         const collisionInterval = setInterval(() => {
@@ -29,10 +26,7 @@ class CollisionManager {
 
     /**
     * Checks for collisions between the character and enemies.
-    *
-    * @function checkEnemyCollisions
-    * @memberof CollisionManager
-    * @description If a collision is detected, the character takes damage, and the status bar is updated.
+    * If a collision is detected, the character takes damage, and the status bar is updated.
     */
     checkEnemyCollisions() {
         this.world.level.enemies.forEach((enemy) => {
@@ -46,10 +40,7 @@ class CollisionManager {
 
     /**
     * Checks for collisions between the character and coins, collecting them upon collision.
-    *
-    * @function checkCoinCollisions
-    * @memberof CollisionManager
-    * @description Removes collected coins from the game and updates the coin count on the status bar.
+    * Removes collected coins from the game and updates the coin count on the status bar.
     */
     checkCoinCollisions() {
         let collectedCoins = [];
@@ -67,10 +58,7 @@ class CollisionManager {
 
     /**
     * Checks for collisions between the character and bottles, collecting them upon collision.
-    *
-    * @function checkBottleCollisions
-    * @memberof CollisionManager
-    * @description Removes collected bottles from the game and updates the bottle count on the status bar.
+    * Removes collected bottles from the game and updates the bottle count on the status bar.
     */
     checkBottleCollisions() {
         let collectedBottles = [];
@@ -88,10 +76,7 @@ class CollisionManager {
 
     /**
     * Checks if the character should throw a bottle and handles enemy collisions with thrown objects.
-    *
-    * @function checkThrowObjects
-    * @memberof CollisionManager
-    * @description Attempts to throw a bottle if conditions are met, and checks for collisions with enemies.
+    * Attempts to throw a bottle if conditions are met, and checks for collisions with enemies.
     */
     checkThrowObjects() {
         this.attemptThrowBottle();
@@ -101,10 +86,7 @@ class CollisionManager {
 
     /**
     * Attempts to throw a bottle in the direction the character is facing.
-    *
-    * @function attemptThrowBottle
-    * @memberof CollisionManager
-    * @description Creates and throws a bottle if the character has bottles and throw cooldown is inactive.
+    * Creates and throws a bottle if the character has bottles and throw cooldown is inactive.
     */
     attemptThrowBottle() {
         if (this.world.keyboard.D && this.world.statusBar.bottleCount > 0 && !this.world.throwCooldown) {
@@ -125,10 +107,7 @@ class CollisionManager {
 
     /**
     * Checks for collisions between thrown bottles and enemies.
-    *
-    * @function checkCollisionsWithEnemies
-    * @memberof CollisionManager
-    * @description Checks if any thrown bottles are colliding with enemies, especially the endboss.
+    * Checks if any thrown bottles are colliding with enemies, especially the endboss.
     */
     checkCollisionsWithEnemies() {
         this.world.throwableObjects.forEach(bottle => {
@@ -143,10 +122,7 @@ class CollisionManager {
 
     /**
     * Activates a cooldown period for throwing bottles.
-    *
-    * @function activateThrowCooldown
-    * @memberof CollisionManager
-    * @description Prevents additional bottle throws for a short period.
+    * Prevents additional bottle throws for a short period.
     */
     activateThrowCooldown() {
         this.world.throwCooldown = true;
@@ -158,10 +134,7 @@ class CollisionManager {
 
     /**
     * Checks for a collision between the character and the endboss.
-    *
-    * @function checkEndbossCollision
-    * @memberof CollisionManager
-    * @description If an endboss exists, checks if the character is colliding with it.
+    * If an endboss exists, checks if the character is colliding with it.
     */
     checkEndbossCollision() {
         const endboss = this.world.level.enemies.find(enemy => enemy instanceof Endboss);

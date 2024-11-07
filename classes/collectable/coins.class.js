@@ -20,11 +20,7 @@ class Coin extends MoveableObject {
 
     /**
     * Animates the object by repeatedly playing an animation of moving images.
-    *
-    * @function animate
-    * @memberof Bottle
-    * @description Sets an interval to play the animation using images from `this.IMAGES_MOVING`.
-    * 
+    * Sets an interval to play the animation using images from `this.IMAGES_MOVING`.
     */
     animate() {
         setInterval(() => {
@@ -35,17 +31,7 @@ class Coin extends MoveableObject {
 
     /**
     * Creates a parabolic arc of coin objects.
-    *
-    * @function createCoinArc
-    * @memberof Coin
-    * @static
-    * @description Generates coins along a parabolic arc defined by the starting position, arc height, and width.
-    * 
-    * @param {number} startX - The x-coordinate where the arc begins.
-    * @param {number} startY - The y-coordinate where the arc begins.
-    * @param {number} arcHeight - The maximum height of the arc.
-    * @param {number} arcWidth - The horizontal span of the arc.
-    * @returns {Coin[]} Array of coins positioned along the arc.
+    * Generates coins along a parabolic arc defined by the starting position, arc height, and width.
     */ 
     static createCoinArc(startX, startY, arcHeight, arcWidth) {
         let coins = [];
@@ -65,16 +51,6 @@ class Coin extends MoveableObject {
 
     /**
     * Creates a vertical line of coin objects.
-    *
-    * @function createCoinLine
-    * @memberof Coin
-    * @static
-    * @description Generates coins along a vertical line starting from a specified position.
-    * 
-    * @param {number} startX - The x-coordinate for the line of coins.
-    * @param {number} startY - The y-coordinate where the line starts.
-    * @param {number} numCoins - The number of coins to generate.
-    * @returns {Coin[]} Array of coins positioned in a line.
     */
     static createCoinLine(startX, startY, numCoins) {
         let coins = [];
@@ -89,13 +65,6 @@ class Coin extends MoveableObject {
    
     /**
     * Generates a random integer between a specified minimum and maximum.
-    *
-    * @function getRandomInt
-    * @memberof Coin
-    * @static
-    * @param {number} min - The minimum value (inclusive).
-    * @param {number} max - The maximum value (inclusive).
-    * @returns {number} A random integer between min and max.
     */
     static getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;

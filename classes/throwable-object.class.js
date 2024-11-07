@@ -31,10 +31,7 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Initiates the throw action, setting up the animation and movement.
-    *
-    * @function throw
-    * @memberof ThrowableObject
-    * @description Calls functions to initialize throw parameters, start animation, and begin movement.
+    * Calls functions to initialize throw parameters, start animation, and begin movement.
     */
     throw() {
         this.initializeThrow();
@@ -45,9 +42,6 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Sets initial speed for the throw and applies gravity.
-    *
-    * @function initializeThrow
-    * @memberof ThrowableObject
     */
     initializeThrow() {
         this.speedY = 25;
@@ -57,10 +51,7 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Starts the throw animation, playing images as long as the object is not on the ground.
-    *
-    * @function startAnimation
-    * @memberof ThrowableObject
-    * @description Loops through throwing images while the object is in the air.
+    * Loops through throwing images while the object is in the air.
     */
     startAnimation() {
         this.animationInterval = setInterval(() => {
@@ -73,10 +64,7 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Begins the movement of the object, updating its position and checking for ground impact.
-    *
-    * @function startMovement
-    * @memberof ThrowableObject
-    * @description Moves the object horizontally and checks if it hits the ground or collides with chickens.
+    * Moves the object horizontally and checks if it hits the ground or collides with chickens.
     */
     startMovement() {
         this.moveInterval = setInterval(() => {
@@ -91,10 +79,7 @@ class ThrowableObject extends MoveableObject {
     
     /**
     * Updates the position of the throwable object and checks for collisions with chickens.
-    *
-    * @function updatePosition
-    * @memberof ThrowableObject
-    * @description Moves the object in its direction and checks for collisions with enemies.
+    * Moves the object in its direction and checks for collisions with enemies.
     */
     updatePosition() {
         this.x += this.direction === 'right' ? 12 : -12;
@@ -105,9 +90,6 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Checks for collisions with chicken enemies, causing damage and removing the object if a collision occurs.
-    *
-    * @function checkCollisionWithChickens
-     @memberof ThrowableObject
     */
     checkCollisionWithChickens() {
         for (let enemy of this.world.level.enemies) {
@@ -123,10 +105,7 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Handles the object's behavior when it hits the ground, stopping animation and playing splash effect.
-    *
-    * @function onGround
-    * @memberof ThrowableObject
-    * @description Stops animation, plays splash animation, and removes the object after a delay.
+    * Stops animation, plays splash animation, and removes the object after a delay.
     */
     onGround() {
         this.isOnGround = true;
@@ -141,9 +120,6 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Removes the throwable object from the game world.
-    *
-    * @function remove
-    * @memberof ThrowableObject
     */
     remove() {
         const index = this.world.throwableObjects.indexOf(this);
@@ -155,11 +131,7 @@ class ThrowableObject extends MoveableObject {
 
     /**
     * Draws the throwable object on the canvas, including optional debug frames.
-    *
- * @function draw
- * @memberof ThrowableObject
- * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on.
- */
+    */
     draw(ctx) {
         super.draw(ctx);
         if (this.world.showFrames) {

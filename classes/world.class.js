@@ -25,7 +25,6 @@ class World {
     muteIconOn = new Image();
     muteIconOff = new Image();
 
-
     constructor(canvas, keyboard, audioManager) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -45,9 +44,6 @@ class World {
     /**
     * Initializes the game world by drawing the initial frame, setting up world references,
     * and starting collision checks and endboss movement monitoring.
-    *
-    * @function initializeWorld
-    * @memberof GameWorld
     */
     initializeWorld() {
         this.draw();
@@ -60,9 +56,6 @@ class World {
     /**
     * Sets up the game world properties, including playing background music, assigning world references 
      to the character and each enemy, and setting initial audio volume levels.
-    *
-    * @function setWorld
-    * @memberof GameWorld
     */
     setWorld() {
         audioManager.play('background');
@@ -76,9 +69,6 @@ class World {
 
     /**
    * Clears all currently active intervals in the game world to reset or stop all ongoing processes.
-    *
-    * @function clearIntervals
-    * @memberof GameWorld
     */
     clearIntervals() {
         this.intervals.forEach(interval => clearInterval(interval));
@@ -89,9 +79,6 @@ class World {
     /**
     * Checks if the game has ended due to the character’s death or the endboss being defeated.
     * If so, stops the game, displays the appropriate end screen, and hides mobile controls.
-    *
-    * @function checkGameEnd
-    * @memberof GameWorld
     */
     checkGameEnd() {
         if (this.character.isDead()) {
@@ -109,9 +96,6 @@ class World {
     /**
     * Displays the button container on the screen and temporarily disables buttons
     * to prevent accidental clicks, re-enabling them after a delay.
-    *
-    * @function showBtnContainer
-    * @memberof GameWorld
     */
     showBtnContainer() {
         const btnContainer = document.querySelector('.btn-container');
@@ -129,9 +113,6 @@ class World {
     /**
     * Checks whether the endboss movement should be triggered based on the character’s position.
     * If conditions are met, initiates endboss movement and enables the endboss display on the status bar.
-    *
-    * @function checkEndbossMovement
-    * @memberof GameWorld
     */
     checkEndbossMovement() {
         setInterval(() => {
@@ -148,9 +129,6 @@ class World {
     /**
     * Sets up click and touch event listeners on the canvas for the mute button,
     * allowing for toggling sound on and off when the button is clicked.
-    *
-    * @function setupCanvasClickListener
-    * @memberof GameWorld
     */
     setupCanvasClickListener() {
         this.canvas.addEventListener('click', (event) => this.handleMuteButtonClick(event));
@@ -164,10 +142,6 @@ class World {
     /**
     * Handles mute button interactions by checking if the mute button was clicked.
     * If clicked, toggles the mute state for the game's audio.
-    *  
-    * @function handleMuteButtonClick
-    * @memberof GameWorld
-    * @param {Event} event - The mouse or touch event data.
     */
     handleMuteButtonClick(event) {
         if (this.gameStopped) return;
@@ -190,10 +164,6 @@ class World {
 
     /**
     * Checks if the HTML mute button element is currently visible.
-    *
-    * @function isHtmlMuteButtonVisible
-    * @memberof GameWorld
-    * @returns {boolean} True if the mute button is displayed.
     */
     isHtmlMuteButtonVisible() {
         const muteButton = document.getElementById('mute-button');
@@ -203,9 +173,6 @@ class World {
 
     /**
     * Toggles the mute state for game audio and updates the mute icon on the HTML button.
-    *
-    * @function toggleMute
-    * @memberof GameWorld
     */
     toggleMute() {
         if (this.audioManager) {
@@ -217,9 +184,6 @@ class World {
 
     /**
     * Updates the mute icon displayed on the HTML button to match the current mute state.
-    *
-    * @function updateHtmlMuteIcon
-    * @memberof GameWorld
     */
     updateHtmlMuteIcon() {
         const muteButton = document.getElementById('mute-button');
@@ -232,9 +196,6 @@ class World {
     /**
     * Draws the mute button icon directly on the canvas, showing the muted or unmuted icon
     * depending on the current mute state.
-    *  
-    * @function drawMuteButton
-    * @memberof GameWorld
     */
     drawMuteButton() {
         let icon = this.audioManager.isMuted ? this.muteIconOff : this.muteIconOn;
@@ -245,9 +206,6 @@ class World {
     /**
     * Draws the game world, including background, character, enemies, and collectibles,
     * and checks for character death and game end conditions on each frame.
-    *
-    * @function draw
-    * @memberof GameWorld
     */
     draw() {
         if (this.handleCharacterDeath()) return;
@@ -274,10 +232,6 @@ class World {
 
     /**
     * Manages the character's death animation and stops the game once the animation completes.
-    *
-    * @function handleCharacterDeath
-    * @memberof GameWorld
-    * @returns {boolean} True if the character is dead and animation has completed.
     */
     handleCharacterDeath() {
         if (this.character.isDead()) {
@@ -294,9 +248,6 @@ class World {
 
     /**
     * Resets the game world to its initial state, reinitializing levels, resetting the character, and starting checks.
-    *
-    * @function resetWorld
-    * @memberof GameWorld
     */
     resetWorld() {
         this.clearIntervals();
@@ -312,9 +263,6 @@ class World {
 
     /**
     * Resets properties related to bottle spacing within the game world.
-    *
-    * @function resetBottleProperties
-    * @memberof GameWorld
     */
     resetBottleProperties() {
         Bottle.lastX = 0;
@@ -324,9 +272,6 @@ class World {
 
     /**
     * Initializes the level with arrays of enemies, coins, bottles, clouds, and background objects.
-    *
-    * @function initializeLevel
-    * @memberof GameWorld
     */
     initializeLevel() {
         this.level = new Level(
@@ -342,10 +287,6 @@ class World {
 
     /**
     * Creates instances of enemies from the level configuration.
-    *
-    * @function createEnemies
-    * @memberof GameWorld
-    * @returns {GameObject[]} Array of enemy objects.
     */
     createEnemies() {
         return level1.enemies.map(enemy => new enemy.constructor());
@@ -354,10 +295,6 @@ class World {
 
     /**
     * Creates instances of coins for the level.
-    *
-    * @function createCoins
-    * @memberof GameWorld
-    * @returns {Coin[]} Array of coin objects.
     */
     createCoins() {
         return level1.coins.map(() => new Coin());
@@ -366,10 +303,6 @@ class World {
 
     /**
     * Creates instances of bottles at random positions for the level.
-    *
-     @function createBottles
-    * @memberof GameWorld
-    * @returns {Bottle[]} Array of bottle objects.
     */
     createBottles() {
         return Array.from({ length: 12 }, () => {
@@ -382,10 +315,6 @@ class World {
 
     /**
     * Creates instances of clouds for the level.
-    *
-    * @function createClouds
-    * @memberof GameWorld
-    * @returns {Cloud[]} Array of cloud objects.
     */
     createClouds() {
         return level1.clouds.map(() => new Cloud());
@@ -394,10 +323,6 @@ class World {
 
     /**
     * Creates background objects from the level configuration.
-    *
-    * @function createBackgroundObjects
-    * @memberof GameWorld
-    * @returns {BackgroundObject[]} Array of background objects.
     */
     createBackgroundObjects() {
         return level1.backgroundObjects.map(bg => new BackgroundObject(bg.img.src, bg.x));
@@ -406,9 +331,6 @@ class World {
 
     /**
     * Resets various game state properties to their initial values.
-    *
-    * @function resetGameState
-    * @memberof GameWorld
     */
     resetGameState() {
         this.endbossMovementStarted = false;
@@ -420,9 +342,6 @@ class World {
 
     /**
     * Resets the character to its initial state and clears all active intervals related to the character.
-    *
-    * @function resetCharacter
-    * @memberof GameWorld
     */
     resetCharacter() {
         if (this.character) {
@@ -434,10 +353,6 @@ class World {
     
     /**
     * Draws multiple objects on the map by calling `addToMap` on each.
-    *  
-    * @function addObjectsToMap
-    * @memberof GameWorld
-    * @param {GameObject[]} objects - Array of objects to be drawn on the map.
     */
     addObjectsToMap(objects) {
         objects.forEach(object => {
@@ -448,10 +363,6 @@ class World {
 
     /**
     * Draws an individual object on the map and handles flipping if necessary.
-    *
-    * @function addToMap
-    * @memberof GameWorld
-    * @param {GameObject} moveableObject - The object to draw on the map.
     */
     addToMap(moveableobject) {
         if (moveableobject.otherDirection) {
@@ -469,10 +380,6 @@ class World {
 
     /**
     * Flips an object's image horizontally to simulate movement in the opposite direction.
-    *
-    * @function flipImage
-    * @memberof GameWorld
-    * @param {GameObject} moveableObject - The object whose image should be flipped.
     */
     flipImage(moveableobject) {
         this.ctx.save();
@@ -484,10 +391,6 @@ class World {
 
     /**
     * Restores the object's image to its original orientation after flipping.
-    *
-    * @function flipImageBack
-     @memberof GameWorld
-    * @param {GameObject} moveableObject - The object to restore.
     */
     flipImageBack(moveableobject) {
         moveableobject.x = moveableobject.x * -1;
@@ -497,9 +400,6 @@ class World {
 
     /**
     * Clears the canvas to prepare for the next frame's drawing.
-    *
-    * @function clearCanvas
-    * @memberof GameWorld
     */
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -514,4 +414,3 @@ window.addEventListener('keydown', (event) => {
         }
     }
 });
-
