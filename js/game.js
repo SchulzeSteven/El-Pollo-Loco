@@ -146,8 +146,10 @@ function updateControlsVisibility() {
  */
 function updateDesktopControlsVisibility() {
     const controls = document.querySelector('.controls');
-    const isiPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
-    controls.style.display = (window.innerWidth < 950 || isiPad) ? 'none' : 'flex';
+    const isiPadLandscape = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document && window.innerWidth > window.innerHeight;
+
+    // Desktop-Controls ausblenden, wenn die Welt gestoppt ist oder iPad im Querformat verwendet wird
+    controls.style.display = (window.innerWidth < 950 || isiPadLandscape || (world && world.gameStopped)) ? 'none' : 'flex';
 }
 
 
@@ -158,8 +160,9 @@ function updateDesktopControlsVisibility() {
 function updateMobileControlsVisibility() {
     const mobileMovementContainer = document.getElementById("mobile-movement-container");
     const muteButton = document.getElementById("mute-button");
-    const isiPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
-    if (world && !world.gameStopped && (window.innerWidth < 950 || isiPad)) {
+    const isiPadLandscape = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document && window.innerWidth > window.innerHeight;
+
+    if (world && !world.gameStopped && (window.innerWidth < 950 || isiPadLandscape)) {
         mobileMovementContainer.style.display = 'flex';
         muteButton.style.display = 'flex';
     } else {

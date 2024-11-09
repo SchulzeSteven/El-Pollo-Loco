@@ -15,11 +15,11 @@ class MoveableObject extends DrawableObjekt {
     applyGravity() {
         const gravityInterval = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
+                this.y -= this.speedY * 0.5; // kleinere Schritte für die y-Anpassung
+                this.speedY -= this.acceleration * 0.5;
                 this.checkIfLanded();
             }
-        }, 1000 / 25);
+        }, 1000 / 50); // Intervall auf 20 ms reduzieren
         this.intervals.push(gravityInterval);
     }
 
@@ -43,6 +43,7 @@ class MoveableObject extends DrawableObjekt {
         if (!(this instanceof ThrowableObject) && this.y >= 150) {
             this.y = 150;
             this.speedY = 0;
+            this.lastBounceTime = new Date().getTime();
         }
     }
 

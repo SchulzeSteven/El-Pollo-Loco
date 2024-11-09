@@ -371,6 +371,10 @@ canvas {
         height: 90vh;
     }
 
+    .btn-container {
+        top: 62%;
+    }
+
     h1 {
         display: none;
     }
@@ -385,11 +389,19 @@ canvas {
         gap: 170px;
         bottom: 28%;
     }
+
+    .btn-container {
+        top: 66%;
+    }
 }
 
 @media only screen and (min-device-width: 1024px) and (max-device-width: 1024px) and (orientation: landscape) {
     .mobile-movement-container {
         gap: 170px;
         bottom: 27%;
+    }
+
+    .btn-container {
+        top: 67%;
     }
 }
