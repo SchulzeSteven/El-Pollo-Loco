@@ -63,17 +63,22 @@ class MoveableObject extends DrawableObjekt {
 
 
     /**
-    * Checks if this object is colliding with the top of another object.
+    * Checks if the character is colliding with the top of another movable object.
+    * For smaller chickens, a larger height threshold is used to detect top collisions.
     */
     isCollidingTop(moveableObject) {
         const redFrame1 = this.getRedFrame();
         const redFrame2 = moveableObject.getRedFrame();
-        return redFrame1.y + redFrame1.height >= redFrame2.y &&
-                redFrame1.y + redFrame1.height <= redFrame2.y + redFrame2.height / 2 &&
-                redFrame1.x < redFrame2.x + redFrame2.width &&
-                redFrame1.x + redFrame1.width > redFrame2.x;
+        const isSmallChicken = moveableObject instanceof Chicken_Small;
+        
+        return (
+            redFrame1.y + redFrame1.height >= redFrame2.y &&
+            redFrame1.y + redFrame1.height <= redFrame2.y + (isSmallChicken ? redFrame2.height : redFrame2.height / 2) &&
+            redFrame1.x < redFrame2.x + redFrame2.width &&
+            redFrame1.x + redFrame1.width > redFrame2.x
+        );
     }
-
+    
     
     /**
     * Returns the adjusted dimensions of the object for collision detection.

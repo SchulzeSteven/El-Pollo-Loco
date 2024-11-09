@@ -39,6 +39,66 @@ class CollisionManager {
 
 
     /**
+    * Handles collisions between the character and an array of chickens, applying either a bounce or
+    * damage effect based on the type of collision detected.
+    */
+    handleChickenCollisions(character, chickens) {
+        let currentTime = new Date().getTime();
+        if (character.hasBounced && currentTime - character.lastBounceTime < character.bounceCooldown) {
+            return;
+        }
+
+        let chickenHit = false;
+        for (let chicken of chickens) {
+            if (this.checkBounceCollision(character, chicken) && !chickenHit) {
+                this.applyBounce(character, chicken);
+                chickenHit = true;
+            } else if (this.applyDamageIfColliding(character, chicken) && !chickenHit) {
+                chickenHit = true;
+            }
+        }
+    }
+
+
+    /**
+    * Checks if the character should bounce off a chicken, which occurs if the character is colliding
+    * with the top of the chicken and is moving downwards.
+    */
+    checkBounceCollision(character, chicken) {
+        return character.isCollidingTop(chicken) && character.speedY < 0;
+    }
+
+
+    /**
+    * Applies a bounce effect to the character and damages the chicken.
+    * Adjusts the character's position and sets a cooldown for the next bounce.
+    */
+    applyBounce(character, chicken) {
+        character.bounceOff();
+        chicken.takeHit();
+        character.y = chicken.y - character.height;
+        character.hasBounced = true;
+        character.lastBounceTime = new Date().getTime();
+        setTimeout(() => {
+            character.hasBounced = false;
+        }, character.bounceCooldown);
+    }
+
+
+    /**
+    * Applies damage to the character if there is a side collision with a chicken.
+    * Returns true if damage was applied.
+    */
+    applyDamageIfColliding(character, chicken) {
+        if (character.isColliding(chicken) && !character.isHurt() && !character.hasBounced) {
+            character.hit(chicken);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
     * Checks for collisions between the character and coins, collecting them upon collision.
     * Removes collected coins from the game and updates the coin count on the status bar.
     */
@@ -85,25 +145,25 @@ class CollisionManager {
 
 
     /**
-    * Attempts to throw a bottle in the direction the character is facing.
-    * Creates and throws a bottle if the character has bottles and throw cooldown is inactive.
+     * Attempts to throw a bottle if conditions are met:
+    * the 'D' key is pressed, there are bottles in inventory, and no cooldown is active.
+    * Initializes the bottle's direction and position, plays the throw sound, and starts a cooldown.
     */
     attemptThrowBottle() {
         if (this.world.keyboard.D && this.world.statusBar.bottleCount > 0 && !this.world.throwCooldown) {
             this.world.character.resetIdleTimers();
-            
-            const direction = this.world.character.otherDirection ? 'left' : 'right';
-            const offsetX = direction === 'right' ? 60 : -30;
+            if (this.world.character.otherDirection) return;
+            const direction = 'right';
+            const offsetX = 60;
             const bottle = new ThrowableObject(this.world.character.x + offsetX, this.world.character.y + 100, direction);
             bottle.world = this.world;
-            
             this.world.throwableObjects.push(bottle);
             this.world.statusBar.setBottleCount(this.world.statusBar.bottleCount - 1);
             this.world.audioManager.play('throwing');
             this.activateThrowCooldown();
         }
     }
-
+    
 
     /**
     * Checks for collisions between thrown bottles and enemies.

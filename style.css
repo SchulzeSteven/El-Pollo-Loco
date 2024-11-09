@@ -123,7 +123,7 @@ canvas {
     justify-content: center;
     gap: 200px;
     position: absolute;
-    top: 68%;
+    top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -250,6 +250,79 @@ canvas {
     z-index: 1000;
 }
 
+@media only screen and (min-width: 3840px) {
+    .startScreen {
+        width: 1920px;
+        height: 1080px;
+    }
+
+    .startScreen-img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .start-button {
+        font-size: 80px;
+        padding: 24px 40px;
+    }
+
+    .btns.restart {
+        font-size: 80px;
+        padding: 24px 40px;
+    }
+
+    .startbtn-container {
+        gap: 200%;
+    }
+
+    .btn-container {
+        gap: 200%;
+    }
+
+    canvas {
+        width: 1920px;
+        height: 1080px;
+        display: block;
+    }
+
+    h1 {
+        font-size: 160px;
+    }
+
+    .controls h4 {
+        font-size: 72px;
+    }
+
+    h2 {
+        font-size: 120px;
+    }
+
+    .impressum-section p {
+        font-size: 80px;
+    }
+
+    .impressum-content {
+        margin-top: 120px;
+    }
+
+    #impressum {
+        max-width: 860px;
+        height: 1080px;
+        margin: 70px auto;
+        padding: 16px 80px;
+    }
+
+    .back-btn {
+        font-size: 80px;
+        padding: 24px 40px;
+        }
+    }
+
+@media only screen and (max-height: 1080px) {
+    .btn-container {
+        top: 68%;
+    }
+  }
 
   @media (max-width: 1024px) and (orientation: portrait) {
     #orientation-warning {

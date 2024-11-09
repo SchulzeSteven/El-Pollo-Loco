@@ -146,10 +146,9 @@ function updateControlsVisibility() {
  */
 function updateDesktopControlsVisibility() {
     const controls = document.querySelector('.controls');
-    const isiPadLandscape = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document && window.innerWidth > window.innerHeight;
-
-    // Desktop-Controls ausblenden, wenn die Welt gestoppt ist oder iPad im Querformat verwendet wird
-    controls.style.display = (window.innerWidth < 950 || isiPadLandscape || (world && world.gameStopped)) ? 'none' : 'flex';
+    const isiPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+    const isiPadLandscape = isiPad && window.innerWidth > window.innerHeight;
+    controls.style.display = (window.innerWidth < 1367 || isiPadLandscape) ? 'none' : 'flex';
 }
 
 
@@ -160,9 +159,10 @@ function updateDesktopControlsVisibility() {
 function updateMobileControlsVisibility() {
     const mobileMovementContainer = document.getElementById("mobile-movement-container");
     const muteButton = document.getElementById("mute-button");
-    const isiPadLandscape = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document && window.innerWidth > window.innerHeight;
+    const isiPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+    const isiPadLandscape = isiPad && window.innerWidth > window.innerHeight;
 
-    if (world && !world.gameStopped && (window.innerWidth < 950 || isiPadLandscape)) {
+    if (world && !world.gameStopped && (window.innerWidth < 1367 || isiPadLandscape)) {
         mobileMovementContainer.style.display = 'flex';
         muteButton.style.display = 'flex';
     } else {
@@ -186,6 +186,7 @@ function home() {
         stopGame();
         world = null;
     }
+    updateControlsVisibility();
 }
 
 
@@ -254,10 +255,12 @@ function initEventListeners() {
     });
 }
 
+
 /**
  * Listens for window resize and orientation change events to update control visibility as needed.
  * Ensures that the interface adapts dynamically to screen orientation and size changes.
  */
+window.addEventListener('load', updateControlsVisibility);
 window.addEventListener('resize', updateControlsVisibility);
 window.addEventListener('orientationchange', updateControlsVisibility);
 document.addEventListener("DOMContentLoaded", updateControlsVisibility);

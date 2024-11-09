@@ -72,7 +72,7 @@ class Character extends MoveableObject {
     deadAnimationCompleted = false;
     isSnoring = false;
     lastBounceTime = 0;
-    bounceCooldown = 250;
+    bounceCooldown = 600;
     intervals = [];
 
 
@@ -93,34 +93,14 @@ class Character extends MoveableObject {
 
 
     /**
-     * Checks for collisions with chicken objects and triggers actions based on collision type.
-    * If the character collides from above, it bounces off and damages the chicken.
-    * Side collisions cause the character to take damage.
+    * Checks for collisions between the character and chicken objects, delegating collision handling to the collision manager.
     */
     checkCollisionsWithChickens(chickens) {
-        if (this.isDead() || this.world.endbossDefeated) {
-            return;
-        }
-        let currentTime = new Date().getTime();
-        if (currentTime - this.lastBounceTime < this.bounceCooldown) {
-            return;
-        }
-        let chickenHit = false;
-        for (let chicken of chickens) {
-            if (this.isCollidingTop(chicken) && this.speedY < 0 && !chickenHit) {
-                this.bounceOff();
-                chicken.takeHit();
-                chickenHit = true;
-                this.lastBounceTime = currentTime;
-                break;
-            } 
-            else if (this.isColliding(chicken) && !this.isHurt() && !chickenHit) {
-                this.hit(chicken);
-            }
-        }
+        if (this.isDead() || this.world.endbossDefeated) return;
+        this.world.collisionManager.handleChickenCollisions(this, chickens);
     }
     
-
+    
     /**
     * Starts various intervals for animations, movements, and collision checks.
     * This function is critical for enabling continuous character behavior and interaction with the game world.
@@ -311,10 +291,10 @@ class Character extends MoveableObject {
     * intervals. Resets idle and animation states to ensure a clean character state.
     */
     clearIntervals() {
-        this.intervals.forEach(interval => clearInterval(interval));
+        this.intervals.forEach(clearInterval);
+        this.intervals = [];
         clearTimeout(this.idleTimeout);
         clearTimeout(this.longIdleTimeout);
-        this.intervals = [];
         this.isIdle = false;
         this.isLongIdle = false;
         this.animationStarted = false;
